@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- rag_version: increment when entries are added, removed, or corrected -->
+<!-- schema_version: increment when field names, structure, or controlled vocabulary change -->
+<!-- Controlled vocabulary for classification fields: see rag_registry_circular_economy.md, Section 4 -->
+<!-- role attribute values: filter=structured metadata for pre-filtering; prose=free text for semantic embedding; id=identifier, excluded from both -->
+<!-- classification fields (role="filter") are the sole pre-filter layer; retrieval_tags have been removed as redundant -->
+<!-- on <pressure> and <criterion> elements, role="filter" means: filter on the @type attribute; element text content is supplementary prose context -->
+<rag_knowledge_base
+  rag_id="b2b-asset-sharing"
+  rag_version="1.0"
+  schema_version="1.4"
+  created="2026-05-01"
+  min_confidence="High"
+  entry_id_prefix="BAS"
+  topic_domain="B2B Asset Sharing Platforms"
+  source_domain="Circular Economy Examples"
+  registry="rag_registry_circular_economy.md">
+
+  <entries>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="BAS-001">
+      <title role="prose">Reusing valuable resources more effectively: Rheaply</title>
+      <url role="id">rheaply</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Rheaply</org_name>
+        <org_one_liner role="prose"><![CDATA[Rheaply is a US B2B re-commerce platform that enables organizations to manage, share, and resell surplus furniture, fixtures, equipment, and building materials — both internally and across a nationwide marketplace network.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">SME</size>
+          <industry role="filter">SaaS / Asset Management / Re-commerce</industry>
+          <type role="filter">B2B</type>
+        </org_profile>
+        <launch_date role="filter">Not stated</launch_date>
+        <maturity_stage role="filter">Growth</maturity_stage>
+        <geography role="filter">United States</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[Rheaply is a US B2B re-commerce platform that enables organizations to manage, share, and resell surplus furniture, fixtures, equipment, and building materials — both within their own organizations and across a nationwide marketplace network. By combining smart inventory management tools with connected marketplace listings, Rheaply gives organizations visibility into their idle assets, enables internal redeployment before external sale, and keeps resources out of landfill. The platform serves universities, hospitals, corporations, and municipalities seeking to reduce procurement costs and waste, turning idle capital assets into recoverable value rather than disposal costs.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Business, Cities</topic_tags>
+        <circular_model_primary role="filter">Sharing Platform</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Share</sub_model>
+          <sub_model role="filter">Resell</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Technical cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Product Use</stage>
+          <stage role="filter">End of Life</stage>
+          <stage role="filter">Cross-stage</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose">Surplus furniture, fixtures, equipment, and building materials redeployed internally or traded between organizations rather than disposed of</material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Organizations procure new assets while disposing of serviceable surplus through landfill or low-value liquidation, with no system to capture or redistribute idle asset value across departments or peer institutions.]]></description>
+        <inefficiency_type role="filter">Underutilized capacity</inefficiency_type>
+        <inefficiency_type role="filter">Unexploited customer engagement</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose"><![CDATA[SaaS subscription for asset management platform access; transaction fees or marketplace commissions on resale activity]]></revenue_model>
+        <pricing_mechanism role="prose">Subscription plus transaction fee</pricing_mechanism>
+        <technology_enabler role="prose">Inventory management software; connected marketplace listings; asset tracking and reporting dashboard</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: procurement and sustainability managers at universities, hospitals, corporations, and municipalities. Secondary: internal departments receiving redeployed assets; external organizations purchasing surplus via marketplace.]]></target_users>
+        <value_propositions role="prose"><![CDATA[Organizations: reduced disposal costs, lower procurement spend on new assets, and documented sustainability metrics. Secondary buyers: access to serviceable assets at below-market cost. Sustainability teams: verifiable diversion-from-landfill data.]]></value_propositions>
+        <partnerships role="prose"><![CDATA[Universities, hospital systems, corporate real estate teams, and municipal governments as both suppliers and buyers of surplus assets; logistics providers for asset movement between sites.]]></partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Not stated in source. Platform enables organizations to track and report on materials diverted from landfill and cost savings from avoided procurement.]]></quantified_impact>
+        <replication_model role="prose">Platform model is inherently scalable; network effects increase as more institutions join the marketplace and the pool of available surplus grows.</replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[US sustainability reporting requirements and institutional ESG commitments create internal demand for documented waste diversion; some government procurement rules require surplus disposal through approved channels.]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Resource cost or scarcity" role="filter">rising procurement costs for new assets and disposal costs for surplus create financial case for internal redeployment</pressure>
+          <pressure type="Internal mandate or leadership commitment" role="filter">sustainability goals and ESG reporting requirements drive institutional demand for documented waste diversion</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="Cost reduction" role="filter">reduced procurement and disposal costs for member organizations</criterion>
+          <criterion type="Emissions or resource reduction target" role="filter">documented diversion of surplus assets from landfill</criterion>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Organizational inertia around surplus disposal processes; internal logistics for moving assets between departments or sites; data quality for asset inventory; incentive alignment between departments that hold assets and those that could reuse them.]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[Low to moderate: most institutions had informal or ad-hoc surplus disposal processes with no systematic visibility into idle asset inventories.]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Asset inventory digitization; internal champions or sustainability staff to drive adoption; logistics for intra-organization and inter-organization asset movement; procurement policy flexibility to allow acquisition from peer institutions or internal surplus.]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[The organization lists surplus furniture, fixtures, and equipment on Rheaply's internal network, and in return a peer department or connected institution acquires it rather than purchasing new, while Rheaply closes the utilization loop by matching idle assets with active needs before materials exit the organization.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for large institutions or corporates designing internal asset redeployment or B2B resale networks; most relevant where procurement waste and idle capital assets are high, sustainability reporting mandates exist, and no internal inventory visibility system is in place.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="BAS-002">
+      <title role="prose">Business-to-business asset sharing: FLOOW2</title>
+      <url role="id">business-to-business-asset-sharing</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">FLOOW2</org_name>
+        <org_one_liner role="prose"><![CDATA[FLOOW2 is a B2B sharing marketplace that enables companies and institutions to share excess equipment, personnel skills, and knowledge with each other — the first platform explicitly targeting business-to-business overcapacity sharing.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">SME</size>
+          <industry role="filter">SaaS / B2B Marketplace / Asset Sharing</industry>
+          <type role="filter">B2B</type>
+        </org_profile>
+        <launch_date role="filter">Not stated</launch_date>
+        <maturity_stage role="filter">Growth</maturity_stage>
+        <geography role="filter">Global</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[FLOOW2 is a B2B sharing marketplace that enables companies and institutions to share excess equipment, personnel skills, and knowledge with each other — the first platform explicitly targeting business-to-business overcapacity sharing rather than consumer peer-to-peer exchange. Companies register and pay a subscription to list their underutilized equipment, generating revenue from idle assets while other businesses access equipment without the cost of ownership. The platform operates globally and addresses the significant proportion of business equipment and personnel capacity that sits idle for much of its lifetime, converting stranded organizational capacity into tradeable value across industry boundaries.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Business</topic_tags>
+        <circular_model_primary role="filter">Sharing Platform</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Share</sub_model>
+          <sub_model role="filter">Pay-per-use</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Technical cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Production</stage>
+          <stage role="filter">Product Use</stage>
+          <stage role="filter">Cross-stage</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose">Business equipment and machinery shared peer-to-peer between companies, increasing utilization rates of underused capital assets and reducing need for new equipment purchase</material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Organizations purchase equipment that sits idle for much of its operational life, while peer organizations buy duplicate equipment rather than accessing existing capacity — duplicating capital expenditure and creating systemic underutilization across industries.]]></description>
+        <inefficiency_type role="filter">Underutilized capacity</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose"><![CDATA[Subscription fee for platform access and listing rights; revenue sharing or transaction fees on equipment rental transactions between members]]></revenue_model>
+        <pricing_mechanism role="prose">Subscription plus usage-based transaction fees</pricing_mechanism>
+        <technology_enabler role="prose">Online marketplace with search, listing, and transaction management for equipment and capacity; profile and verification system for B2B trust</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: operations and procurement managers at companies and institutions with underutilized equipment or specialist capacity. Secondary: businesses seeking short-term access to equipment or specialist skills without purchase or staffing overhead.]]></target_users>
+        <value_propositions role="prose"><![CDATA[Asset owners: new revenue stream from idle equipment or personnel capacity. Asset renters: access to equipment or skills without capital outlay or long-term commitment. Both: reduced total cost of ownership and access to a wider range of capabilities than each organization could afford to own outright.]]></value_propositions>
+        <partnerships role="prose"><![CDATA[Industrial companies, institutions, and SMEs across sectors as both listers and renters of equipment; platform depends on critical mass of diverse listings to deliver value to all member types.]]></partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Not stated in source. Platform impact is proportional to membership scale and transaction volume; each sharing transaction displaces a unit of new equipment purchase or disposal.]]></quantified_impact>
+        <replication_model role="prose">Platform model scales with membership; global operation enables cross-border equipment sharing without geographic constraint on network growth.</replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[EU circular economy action plans and national sustainability strategies create incentive for businesses to demonstrate resource efficiency and asset utilization; ESG disclosure requirements reward documented idle-capacity reduction.]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Resource cost or scarcity" role="filter">cost of equipment ownership and the lost revenue from idle assets creates financial incentive for organizations to monetize underutilized capacity</pressure>
+          <pressure type="Competitor or market pressure" role="filter">as B2B sharing platforms gain traction, organizations not participating risk paying more for equipment ownership than peers who share</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="Cost reduction" role="filter">reduced capital expenditure on equipment and lower idle-asset carrying costs for member organizations</criterion>
+          <criterion type="New revenue or market access" role="filter">new revenue from listing idle equipment; access to equipment and skills beyond each organization's owned inventory</criterion>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[B2B trust between competing organizations sharing sensitive equipment; insurance and liability for equipment rented between businesses; logistics for equipment movement; internal approval processes for listing or renting assets outside the organization.]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[Low: most organizations had no formal mechanism for monetizing or sharing idle equipment with peer organizations outside informal bilateral arrangements.]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Asset inventory visibility; willingness to share capacity with peer organizations; internal procurement policy flexibility; insurance or indemnity framework for equipment lent outside the organization.]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[The business lists its idle equipment or personnel capacity on FLOOW2's B2B marketplace, and in return earns revenue from an asset that would otherwise sit unused, while FLOOW2 closes the utilization loop by connecting excess capacity with active demand across its subscriber network.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for B2B organizations or platforms building equipment or skills sharing across industries; most relevant where organizations have idle specialized equipment and would benefit from generating revenue from underutilized capacity without committing to a full product-as-a-service ownership model.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="BAS-003">
+      <title role="prose">Borrow stuff you need, lend stuff you don't: Fat Lama</title>
+      <url role="id">borrow-stuff-you-need-lend-stuff-you-dont</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Fat Lama</org_name>
+        <org_one_liner role="prose"><![CDATA[Fat Lama is a peer-to-peer sharing platform for high-value technical equipment — cameras, drones, musical instruments, and lighting — that enables individuals to rent out their idle assets to others who need them temporarily, with insurance coverage on all rentals.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">SME</size>
+          <industry role="filter">P2P Marketplace / Equipment Rental / Insurtech</industry>
+          <type role="filter">B2C</type>
+        </org_profile>
+        <launch_date role="filter">Not stated</launch_date>
+        <maturity_stage role="filter">Growth</maturity_stage>
+        <geography role="filter">United Kingdom (primary)</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[Fat Lama is a peer-to-peer sharing platform for technical equipment — cameras, drones, musical instruments, lighting, and other high-value items — that enables individuals to rent out their idle assets to others who need them temporarily. The platform provides insurance coverage on all rentals, solving the trust barrier that limits most peer-to-peer sharing. By monetizing idle high-value equipment, Fat Lama increases asset utilization rates, gives renters affordable access to equipment they would rarely use if owned, and creates financial incentives for manufacturers to build more durable products. The model is distinguished by embedding insurance into the transaction rather than requiring owners to arrange their own coverage.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Business, Retail</topic_tags>
+        <circular_model_primary role="filter">Sharing Platform</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Share</sub_model>
+          <sub_model role="filter">Pay-per-use</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Technical cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Product Use</stage>
+          <stage role="filter">Cross-stage</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose"><![CDATA[High-value technical equipment (cameras, drones, instruments, lighting) shared peer-to-peer rather than owned by each user, increasing utilization and reducing need for new production]]></material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Individuals purchase high-value equipment used infrequently, with assets sitting idle between uses and no mechanism for owners to recover value from downtime; renters pay full retail price for equipment they would use rarely.]]></description>
+        <inefficiency_type role="filter">Underutilized capacity</inefficiency_type>
+        <inefficiency_type role="filter">Premature product life</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose"><![CDATA[Commission on each rental transaction between owner and renter; insurance premium embedded in rental transaction fee]]></revenue_model>
+        <pricing_mechanism role="prose">Transaction fee (percentage of rental value) with insurance included</pricing_mechanism>
+        <technology_enabler role="prose">P2P marketplace with listing, search, booking, and payment; integrated insurance coverage on all rental transactions; identity verification and damage claims handling</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary owners: photographers, filmmakers, musicians, and event producers with high-value equipment used intermittently. Primary renters: individuals or small businesses needing temporary access to specialist equipment without the cost or commitment of ownership.]]></target_users>
+        <value_propositions role="prose"><![CDATA[Owners: passive rental income from idle equipment; insurance removes liability risk. Renters: affordable access to high-quality equipment for short-term needs at a fraction of purchase cost. Both: insurance removes the key trust barrier that prevents most P2P sharing of high-value items.]]></value_propositions>
+        <partnerships role="prose"><![CDATA[Insurance underwriters providing coverage for all rental transactions; payment processors; platform depends on density of high-quality listings in target geographies for network effects.]]></partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Not stated in source. Model impact is proportional to rental volume and asset utilization improvement; each rental transaction displaces either a new purchase or unrecovered idle time on an existing asset.]]></quantified_impact>
+        <replication_model role="prose"><![CDATA[Platform model is replicable in any category of high-value, intermittently used consumer goods where trust and insurance barriers limit informal sharing.]]></replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[Not stated. UK sharing economy regulatory environment is permissive; insurance framework enabling per-transaction coverage is the critical regulatory enabler rather than a compliance driver.]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Consumer demand shift" role="filter">growing preference for access over ownership and demand for affordable access to high-value equipment without purchase commitment</pressure>
+          <pressure type="Internal mandate or leadership commitment" role="filter">mission-driven platform design around increasing utilization and reducing unnecessary production</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="New revenue or market access" role="filter">owners earn rental income from idle assets; platform opens a market for affordable equipment access that did not previously exist</criterion>
+          <criterion type="Cost reduction" role="filter">renters access high-value equipment at significantly lower cost than purchase; owners reduce net ownership cost through rental income</criterion>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Trust between strangers transacting high-value equipment; insurance complexity and cost; geographic density required for listing availability; risk of damage claims and disputes; encouraging owners to list premium assets on a new platform.]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[Low: informal P2P lending of equipment existed but without insurance or platform infrastructure; most users defaulted to purchase or professional rental rather than peer sharing.]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Integrated per-transaction insurance product; identity verification and trust mechanisms; critical mass of listings in target equipment categories; frictionless listing and booking experience to lower owner participation barrier.]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[The owner lists a high-value item on Fat Lama and earns rental income from an asset that would otherwise sit idle, while the renter gets affordable access to equipment they need temporarily, and Fat Lama closes the utilization loop by providing insurance coverage that removes the trust barrier for both parties.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for consumer platforms enabling P2P rental of high-value durable goods; most relevant where trust and insurance barriers prevent owners from listing idle assets and renters from accessing affordable equipment, and where asset utilization rates are demonstrably low.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="BAS-004">
+      <title role="prose">Creating trust in the sharing economy: Omocom</title>
+      <url role="id">creating-trust-in-the-sharing-economy-omocom</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Omocom</org_name>
+        <org_one_liner role="prose"><![CDATA[Omocom is a Swedish insurtech company that provides on-demand microinsurance for peer-to-peer rental and sharing transactions, removing the trust barrier that prevents many owners from listing valuable items on sharing platforms.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">SME</size>
+          <industry role="filter">Insurtech / Sharing Economy Infrastructure</industry>
+          <type role="filter">B2B</type>
+        </org_profile>
+        <launch_date role="filter">Not stated</launch_date>
+        <maturity_stage role="filter">Growth</maturity_stage>
+        <geography role="filter">Sweden (global ambition)</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[Omocom is a Swedish insurtech company that provides on-demand microinsurance for peer-to-peer rental and sharing transactions. Unlike conventional annual insurance policies, Omocom only covers an item for the specific period it is being rented, transported, or accessed by another person — removing the trust barrier that prevents many owners from listing valuable items on sharing platforms. By making sharing safe for owners, Omocom acts as enabling infrastructure for the broader sharing economy: it does not operate a sharing platform itself but reduces the systemic friction that keeps idle assets out of circulation across all sharing platforms.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Business</topic_tags>
+        <circular_model_primary role="filter">Sharing Platform</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Share</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Technical cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Product Use</stage>
+          <stage role="filter">Cross-stage</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose">Service / intangible — insurance infrastructure enabling higher utilization of shared physical assets across peer-to-peer platforms</material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Owners of valuable assets decline to list them on sharing platforms due to uninsured risk of damage or loss during third-party use, leaving assets idle rather than shared — a systemic participation barrier that limits utilization across the entire sharing economy.]]></description>
+        <inefficiency_type role="filter">Underutilized capacity</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose"><![CDATA[Insurance premium charged per rental transaction or coverage period; B2B licensing to sharing platforms that embed Omocom coverage into their transaction flow]]></revenue_model>
+        <pricing_mechanism role="prose">Per-transaction microinsurance premium (pay-per-use insurance)</pricing_mechanism>
+        <technology_enabler role="prose">API-based insurance issuance integrated into third-party sharing platform checkout flows; per-item, per-period risk pricing model</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary B2B: sharing platform operators who embed Omocom insurance into their rental transaction flow. End beneficiaries: asset owners and renters on those platforms who gain coverage without arranging separate insurance.]]></target_users>
+        <value_propositions role="prose"><![CDATA[Sharing platforms: embedded trust infrastructure that increases owner participation and listing volume. Asset owners: protection against damage or loss during third-party rental without annual policy overhead. Renters: assurance of covered transactions on partner platforms.]]></value_propositions>
+        <partnerships role="prose"><![CDATA[Sharing platform operators as distribution channel; insurance underwriters providing the risk capital behind the microinsurance product; payment processors.]]></partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Not stated in source. Impact is indirect: Omocom's coverage increases the pool of assets listed on sharing platforms, which amplifies utilization across the platforms it enables rather than generating a direct circular outcome itself.]]></quantified_impact>
+        <replication_model role="prose"><![CDATA[API-based delivery model is inherently scalable across any sharing platform globally; insurance product can be adapted to different asset categories and risk profiles.]]></replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[EU and national insurance regulatory frameworks govern microinsurance product design; growth of the sharing economy creates commercial demand for per-transaction insurance as an alternative to annual policies.]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Consumer demand shift" role="filter">growing peer-to-peer sharing activity creates market demand for transaction-level insurance that annual policies cannot serve</pressure>
+          <pressure type="Internal mandate or leadership commitment" role="filter">mission-driven design around enabling sharing economy participation and reducing systemic trust barriers</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="New revenue or market access" role="filter">insurance premium revenue from a transaction-level coverage model that annual policies cannot address</criterion>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Per-transaction risk pricing complexity; regulatory approval across multiple insurance jurisdictions; dependence on sharing platform partners as distribution channel; adverse selection risk if only high-risk items are listed on covered platforms.]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[Low: conventional insurance was structured around annual policies and individual ownership, with no established market for per-rental transaction coverage at the time of Omocom's launch.]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Insurance regulatory authorization; per-transaction risk pricing model; API integration capability with sharing platform checkout flows; underwriting partner willing to back microinsurance product structure.]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Mechanic present but not prototype-ready</readiness_class>
+        <statement role="prose"><![CDATA[Omocom removes the trust barrier that keeps valuable assets out of sharing circulation by providing on-demand insurance for each rental period, but the circular exchange (asset sharing) is operated by partner platforms, not by Omocom itself. No standalone user-facing circular prototype sentence is drawable from Omocom's mechanics alone.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for enabling infrastructure that de-risks sharing platform models through insurance or trust mechanisms; most relevant when the design challenge is reducing the barrier to circular participation rather than operating the circular exchange itself. Not suitable as a direct prototype analogue — use BAS-001, BAS-002, or BAS-003 for sharing platform prototype generation and reference Omocom as an enabling layer where trust or insurance barriers appear in the context analysis.]]></matching_note>
+    </entry>
+
+  </entries>
+
+</rag_knowledge_base>

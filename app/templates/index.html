@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Circular Concept{% endblock %}
+
+{% block main_class %}flex items-center justify-center min-h-[calc(100vh-65px)]{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-6 py-16">
+
+  <!-- Icon + headline -->
+  <div class="text-center mb-10">
+    <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-terra-green/10 mb-6">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+        stroke-width="1.6" stroke="currentColor" class="w-7 h-7 text-terra-green">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+      </svg>
+    </div>
+    <h1 class="font-serif text-3xl font-semibold text-terra-green leading-snug mb-3">
+      Circular Business Model Generator
+    </h1>
+    <p class="text-terra-muted text-base leading-relaxed max-w-md mx-auto">
+      Generate prototype-ready circular economy concepts tailored to your organization.
+    </p>
+  </div>
+
+  <!-- Two paths -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" x-data="researchCard()">
+
+    <!-- Research card -->
+    <div class="bg-white rounded-[12px] border border-terra-border shadow-terra p-7 flex flex-col">
+
+      <p class="text-xs font-semibold uppercase tracking-widest text-terra-green mb-2">Research first</p>
+      <h2 class="font-serif text-xl font-semibold text-terra-green mb-2">Look up your org</h2>
+      <p class="text-sm text-terra-muted leading-relaxed mb-6">
+        Enter your organization and we'll research context before the survey — pre-filling your answers.
+      </p>
+
+      <form class="flex flex-col gap-3 mt-auto" @submit.prevent="handleSubmit($event)">
+        <input type="text" name="org_name"
+          placeholder="Organization name"
+          required
+          :disabled="loading"
+          class="w-full rounded-xl bg-terra-cream border border-terra-border px-4 py-3 text-sm text-gray-700
+                 placeholder:text-terra-muted focus:outline-none focus:ring-2 focus:ring-terra-green/30
+                 focus:border-terra-green disabled:opacity-60 transition-colors duration-150">
+        <input type="text" name="industry"
+          placeholder="Industry / sector (optional)"
+          :disabled="loading"
+          class="w-full rounded-xl bg-terra-cream border border-terra-border px-4 py-3 text-sm text-gray-700
+                 placeholder:text-terra-muted focus:outline-none focus:ring-2 focus:ring-terra-green/30
+                 focus:border-terra-green disabled:opacity-60 transition-colors duration-150">
+        <button type="submit"
+          :disabled="loading"
+          class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white
+                 bg-terra-green hover:bg-[#3d6849] disabled:opacity-50 transition-colors duration-200 shadow-terra">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+          Research
+        </button>
+      </form>
+    </div>
+
+    <!-- Survey card -->
+    <div class="bg-white rounded-[12px] border border-terra-border shadow-terra p-7 flex flex-col">
+
+      <p class="text-xs font-semibold uppercase tracking-widest text-terra-amber mb-2">Manual entry</p>
+      <h2 class="font-serif text-xl font-semibold text-terra-green mb-2">Take the survey</h2>
+      <p class="text-sm text-terra-muted leading-relaxed mb-2">
+        Answer five questions about your organization and we'll generate structured circular economy concepts.
+      </p>
+      <p class="text-xs text-terra-muted mb-6">Five questions &middot; About five minutes</p>
+
+      <a href="/begin-survey"
+        class="mt-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white
+               bg-terra-amber hover:bg-[#5e4d27] transition-colors duration-200 shadow-terra">
+        Begin survey
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          stroke-width="2" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- Research loading modal -->
+    <div class="fixed inset-0 bg-terra-cream/95 backdrop-blur-sm flex flex-col items-center justify-center z-50 transition-opacity duration-200"
+      :class="loading ? 'opacity-100' : 'opacity-0 pointer-events-none'">
+
+      <div class="w-full max-w-sm px-8 text-center">
+
+        <!-- Large centered spinner -->
+        <div class="flex justify-center mb-5">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke-width="1.4" stroke="currentColor"
+            class="w-12 h-12 text-terra-green animate-spin">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+          </svg>
+        </div>
+
+        <p class="text-xs font-semibold uppercase tracking-widest text-terra-amber mb-1">Researching</p>
+        <h2 class="font-serif text-2xl font-semibold text-terra-green mb-10" x-text="researchingOrg"></h2>
+
+        <!-- Phrase icon + cycling message -->
+        <div class="flex items-center justify-center gap-2.5" x-show="!errorMessage">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke-width="1.8" stroke="currentColor"
+            class="w-4 h-4 text-terra-green flex-shrink-0">
+            <path stroke-linecap="round" stroke-linejoin="round" :d="currentMessage.icon" />
+          </svg>
+          <p class="text-sm text-gray-700 font-medium" x-text="currentMessage.text"></p>
+        </div>
+
+        <!-- Error state -->
+        <template x-if="errorMessage">
+          <div>
+            <p class="text-sm text-red-600 mb-4" x-text="errorMessage"></p>
+            <button @click="stopCycle(); loading = false; errorMessage = null"
+              class="text-sm text-terra-muted hover:text-terra-green transition-colors duration-150">
+              ← Try again
+            </button>
+          </div>
+        </template>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% block scripts %}
+<script>
+  function researchCard() {
+    return {
+      loading:        false,
+      researchingOrg: '',
+      errorMessage:   null,
+      currentMessage: { text: '', icon: '' },
+      _cycleIndex:    0,
+      _cycleTimer:    null,
+      cycleMessages: [
+        { text: 'Searching for sustainability reports…',      icon: 'M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z' },
+        { text: 'Checking packaging commitments…',           icon: 'M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z' },
+        { text: 'Looking up regulatory context…',            icon: 'M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z' },
+        { text: 'Reviewing supply chain footprint…',         icon: 'M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12' },
+        { text: 'Scanning for circular economy initiatives…', icon: 'M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99' },
+        { text: 'Checking industry pressures…',              icon: 'M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941' },
+        { text: 'Looking up investor ESG disclosures…',      icon: 'M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z' },
+        { text: 'Reviewing competitor moves…',               icon: 'M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z' },
+      ],
+
+      startCycle() {
+        this._cycleIndex    = 0;
+        this.currentMessage = this.cycleMessages[0];
+        this._cycleTimer    = setInterval(() => {
+          this._cycleIndex    = (this._cycleIndex + 1) % this.cycleMessages.length;
+          this.currentMessage = this.cycleMessages[this._cycleIndex];
+        }, 2000);
+      },
+
+      stopCycle() {
+        if (this._cycleTimer) { clearInterval(this._cycleTimer); this._cycleTimer = null; }
+      },
+
+      async handleSubmit(event) {
+        const formData      = new FormData(event.target);
+        this.researchingOrg = formData.get('org_name') || '';
+        this.loading        = true;
+        this.errorMessage   = null;
+        this.startCycle();
+
+        try {
+          const response = await fetch('/research-stream', { method: 'POST', body: formData });
+          const reader   = response.body.getReader();
+          const decoder  = new TextDecoder();
+          let   buffer   = '';
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop();
+
+            for (const line of lines) {
+              if (!line.startsWith('data: ')) continue;
+              const ev = JSON.parse(line.slice(6));
+
+              if (ev.type === 'done') {
+                this.stopCycle();
+                window.location.href = '/review';
+              } else if (ev.type === 'error') {
+                this.stopCycle();
+                this.errorMessage = ev.message || 'Something went wrong.';
+                this.loading = false;
+              }
+            }
+          }
+        } catch (err) {
+          this.stopCycle();
+          this.errorMessage = 'Connection failed. Please try again.';
+          this.loading = false;
+        }
+      },
+    };
+  }
+</script>
+{% endblock %}
+
+{% endblock %}

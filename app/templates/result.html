@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Submitted – Circular Concept{% endblock %}
+
+{% block main_class %}flex items-center justify-center min-h-[calc(100vh-65px)]{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto text-center px-6 py-16">
+
+  <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-terra-green/10 mb-8">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+      stroke-width="1.8" stroke="currentColor" class="w-7 h-7 text-terra-green">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+    </svg>
+  </div>
+
+  <h1 class="font-serif text-3xl font-semibold text-terra-green mb-4">Responses received</h1>
+  <p class="text-terra-muted text-base leading-relaxed mb-10">
+    Concept generation coming soon. Your answers have been captured below.
+  </p>
+
+  <div class="text-left space-y-5">
+    {% set questions = [
+      ("What does the organization make or do?", answers.q1),
+      ("Where does waste, inefficiency, or end-of-life live in their value chain?", answers.q2),
+      ("What pressure is driving the need to change?", answers.q3),
+      ("What circular territory have they already explored?", answers.q4),
+      ("What does a successful outcome look like for them?", answers.q5),
+    ] %}
+    {% for label, answer in questions %}
+    <div class="bg-white rounded-[12px] border border-terra-border p-5 shadow-terra">
+      <p class="text-xs font-semibold uppercase tracking-widest text-terra-amber mb-2">Q{{ loop.index }}</p>
+      <p class="text-sm font-semibold text-terra-green mb-1">{{ label }}</p>
+      <p class="text-sm text-gray-600 leading-relaxed">{{ answer or '—' }}</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <a href="/survey"
+    class="inline-flex items-center gap-2 mt-10 px-6 py-3 rounded-xl border border-terra-green
+           text-terra-green font-semibold text-sm hover:bg-terra-green hover:text-white transition-colors duration-200">
+    Start over
+  </a>
+
+</div>
+{% endblock %}

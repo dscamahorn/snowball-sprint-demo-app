@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Error – Circular Concept{% endblock %}
+
+{% block main_class %}flex items-center justify-center min-h-[calc(100vh-65px)]{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto text-center px-6 py-16">
+
+  <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-red-50 mb-8">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+      stroke-width="1.8" stroke="currentColor" class="w-7 h-7 text-red-400">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+    </svg>
+  </div>
+
+  <h1 class="font-serif text-2xl font-semibold text-terra-green mb-3">Something went wrong</h1>
+  <p class="text-terra-muted text-sm leading-relaxed mb-2">
+    The concept generation failed. You can go back and try again.
+  </p>
+  {% if message %}
+  <p class="text-xs text-terra-muted/70 font-mono bg-terra-cream-dark rounded-lg px-4 py-3 mt-4 text-left break-all">
+    {{ message }}
+  </p>
+  {% endif %}
+
+  <div class="flex items-center justify-center gap-4 mt-10">
+    <a href="/review"
+      class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-terra-green text-white
+             font-semibold text-sm hover:bg-[#3d6849] transition-colors duration-200">
+      Back to review
+    </a>
+    <a href="/survey"
+      class="text-sm text-terra-muted hover:text-terra-green transition-colors duration-150">
+      Start over
+    </a>
+  </div>
+
+</div>
+{% endblock %}

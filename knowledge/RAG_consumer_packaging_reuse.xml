@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- rag_version: increment when entries are added, removed, or corrected -->
+<!-- schema_version: increment when field names, structure, or controlled vocabulary change -->
+<!-- Controlled vocabulary for classification fields: see rag_registry_circular_economy.md, Section 4 -->
+<!-- role attribute values: filter=structured metadata for pre-filtering; prose=free text for semantic embedding; id=identifier, excluded from both -->
+<!-- classification fields (role="filter") are the sole pre-filter layer; retrieval_tags have been removed as redundant -->
+<!-- on <pressure> and <criterion> elements, role="filter" means: filter on the @type attribute; element text content is supplementary prose context -->
+<rag_knowledge_base
+  rag_id="consumer-packaging-reuse"
+  rag_version="1.0"
+  schema_version="1.4"
+  created="2026-04-12"
+  min_confidence="High"
+  entry_id_prefix="CPR"
+  topic_domain="Consumer Packaging Reuse"
+  source_domain="Circular Economy Examples"
+  registry="rag_registry_circular_economy.md">
+
+  <entries>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="CPR-001">
+      <title role="prose">A Nationwide, Shared System for Reusable Packaging</title>
+      <url role="id">a-nationwide-shared-system-for-reusable-packaging</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Citeo</org_name>
+        <org_one_liner role="prose"><![CDATA[Citeo is a French nonprofit producer responsibility organization that manages packaging waste recovery and recycling systems on behalf of brands and retailers operating in France.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">Large enterprise</size>
+          <industry role="filter">Packaging / Retail</industry>
+          <type role="filter">B2B2C</type>
+        </org_profile>
+        <launch_date role="filter">June 2025</launch_date>
+        <maturity_stage role="filter">Pilot</maturity_stage>
+        <geography role="filter">France</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[Citeo's ReUse project establishes a large-scale shared infrastructure for reusable packaging across four French regions covering over 16 million people. Shoppers purchase selected products in standardized returnable containers (R-Coeur), then return them in-store via reverse vending machines in exchange for a deposit refund. Retailers, brands, and reuse operators share collection, washing, and logistics infrastructure, reducing per-unit costs. The first phase launched June 2025 with more than 140 product lines, with a national rollout planned for 2027.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Plastics, Retail, Business</topic_tags>
+        <circular_model_primary role="filter">Circular Inputs</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Sustainable product design</sub_model>
+          <sub_model role="filter">Take-back / gamified returns</sub_model>
+          <sub_model role="filter">Recycle / upcycle</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Technical cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Design</stage>
+          <stage role="filter">Product Use</stage>
+          <stage role="filter">End of Life</stage>
+          <stage role="filter">Cross-stage</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose">Standardized reusable consumer packaging (glass and plastic containers)</material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose">Single-use consumer packaging sold once and disposed of after use, with materials going to waste or low-grade recycling.</description>
+        <inefficiency_type role="filter">Wasted end-of-life value</inefficiency_type>
+        <inefficiency_type role="filter">Unsustainable material use</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose"><![CDATA[Extended Producer Responsibility (EPR) fees redistributed to fund reuse infrastructure; deposit system revenues (unreturned deposits reinvested)]]></revenue_model>
+        <pricing_mechanism role="prose">Transaction fee (deposit-return)</pricing_mechanism>
+        <technology_enabler role="prose">Reverse vending machines (RVMs); digital tracking of container flows</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: French grocery shoppers in Brittany, Normandy, Pays de la Loire, and Hauts-de-France. Secondary: major retailers (Carrefour, Leclerc, Intermarche, Cooperative U, Monoprix) and 50+ brands]]></target_users>
+        <value_propositions role="prose"><![CDATA[Reduced packaging waste and landfill costs; meets regulatory targets; access to shared logistics that no single brand could afford alone]]></value_propositions>
+        <partnerships role="prose"><![CDATA[Cooperative U, Carrefour, Intermarche, Leclerc, Monoprix (retailers: provide store locations and in-store return machines); 50+ product brands (supply packaged goods); reuse operators (manage collection, washing, and logistics infrastructure)]]></partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[First phase: over 140 products in reusable packaging on shelves by June 2025; over 360 stores participating by end of 2025; millions of standardized containers targeted by end of 2026]]></quantified_impact>
+        <replication_model role="prose"><![CDATA[Yes: open-source R-Coeur packaging specifications; national rollout planned for all of France by 2027]]></replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[France's AGEC Law (Anti-Waste and Circular Economy Law): mandates 10% reusable packaging by 2027 and requires a share of EPR fees to fund reuse infrastructure]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Regulatory / compliance pressure" role="filter">AGEC Law mandates 10% reusable packaging by 2027 and EPR fees must fund reuse</pressure>
+          <pressure type="Consumer demand shift" role="filter">consumer preference for reduced waste cited</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="Regulatory compliance" role="filter">meet 10% reusable packaging target by 2027</criterion>
+          <criterion type="Emissions or resource reduction target" role="filter">significantly reduce waste and preserve valuable materials</criterion>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Scaling consumer return behavior; ensuring high return rates to make economics viable; complexity of coordinating shared logistics across competing retailers]]></barriers_challenges>
+        <circular_maturity_prior role="prose">Not stated</circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Shared and standardized packaging specification (R-Coeur, open-source); shared logistics, washing, and collection infrastructure across retailers; reverse vending machine network; consumer awareness campaign infrastructure]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[The user purchases a product in a standardized reusable container and returns the empty container to an in-store reverse vending machine, and in return receives a deposit refund, while the producer closes the Deposit-return loop by routing the collected containers through shared washing and refilling infrastructure for reuse by partner brands.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for brands or industry bodies designing multi-party shared packaging infrastructure; most relevant where EPR legislation requires collective reuse investment and no single brand can build the system alone.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="CPR-002">
+      <title role="prose">PALPA: The Collaboration That Led to Finland's Successful Deposit Return System</title>
+      <url role="id">palpa-the-collaboration-that-led-to-finlands-successful-deposit-return</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Suomen Palautuspakkaus Oy (PALPA); Alko Oy; Inex Partners Oy; Kesko Oyj; Hartwall Ab; Olvi Oyj; Sinebrychoff Supply Company Oy; Ekopulloyhdistys ry (Ekopullo)</org_name>
+        <org_one_liner role="prose"><![CDATA[PALPA (Suomen Palautuspakkaus Oy) is a Finnish nonprofit that operates the national deposit-return system for beverage packaging, coordinating collection, logistics, and recycling across retailers, producers, and importers throughout Finland.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">Not stated (nonprofit, ~15 employees)</size>
+          <industry role="filter">Beverage / Packaging / Waste management</industry>
+          <type role="filter">B2B2C</type>
+        </org_profile>
+        <launch_date role="filter">1996</launch_date>
+        <maturity_stage role="filter">Operating at scale</maturity_stage>
+        <geography role="filter">Finland</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[PALPA is a Finnish nonprofit formed in 1996 by competing retailers and breweries to operate a nationwide deposit-return system (DRS) for beverage packaging. When consumers purchase a beverage, a deposit of EUR 0.10-0.40 is added to the price; after consuming the drink, they return the empty can, glass bottle, or PET bottle to reverse vending machines in grocery stores and receive the deposit back. PALPA coordinates the collection, sorting, transport, and recycling of these containers, with revenue from selling high-quality recycled material and unclaimed deposits reinvested into the system.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Plastics, Business, Retail</topic_tags>
+        <circular_model_primary role="filter">Resource Recovery</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Recycle / upcycle</sub_model>
+          <sub_model role="filter">Take-back / gamified returns</sub_model>
+          <sub_model role="filter">Return</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Technical cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">End of Life</stage>
+          <stage role="filter">Cross-stage</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose">Aluminium beverage cans, PET plastic bottles, glass bottles</material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Beverage packaging disposed of as general waste after single use, with low recycling rates and high packaging tax liability for producers.]]></description>
+        <inefficiency_type role="filter">Wasted end-of-life value</inefficiency_type>
+        <inefficiency_type role="filter">Unsustainable material use</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose"><![CDATA[Membership and recycling fees paid by producers and importers; revenue from selling high-quality recycled materials (aluminium, PET, glass); small portion from unreturned deposit float reinvested into system operations]]></revenue_model>
+        <pricing_mechanism role="prose">Transaction fee (deposit per container circulates through the system)</pricing_mechanism>
+        <technology_enabler role="prose"><![CDATA[Reverse vending machines (RVMs) for in-store automated container return and sorting; centralized data system for deposit reimbursement and tax reporting]]></technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: Finnish consumers returning beverage containers. Secondary: beverage producers, importers, retailers, hotels, and restaurants: all entities selling deposit-marked beverages must participate]]></target_users>
+        <value_propositions role="prose"><![CDATA[Avoid or significantly reduce Finnish packaging tax liability; access to shared logistics and recycling infrastructure no single company could build alone; recycled material sold back as high-quality feedstock]]></value_propositions>
+        <partnerships role="prose"><![CDATA[Reverse vending machine suppliers (provide in-store RVM hardware); transport contractors (contracted by PALPA for pickup); processing facility operators (sort and bulk materials); recyclers and beverage packaging manufacturers (receive processed materials); Alko Oy (government-owned alcohol retailer, founding member and key return-point network); Ekopullo (operates complementary refillable packaging DRS)]]></partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Over 92% PET bottle recovery rate; 99% aluminium can recovery rate; 99% glass bottle recovery rate; ~EUR 80 million annual turnover; ~EUR 360 million in deposit fees circulating annually]]></quantified_impact>
+        <replication_model role="prose"><![CDATA[Yes: PALPA is actively referenced as a model for other countries designing DRS systems, particularly as EU mandates approach]]></replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[Finnish packaging tax legislation (1983): levied on beverage packaging not part of a DRS; EU membership in 1995 (ended Alko Oy's regulatory monopoly, prompting private-sector collaboration); EU Single-Use Plastics Directive (mandates 90% plastic bottle collection by 2029)]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Regulatory / compliance pressure" role="filter">Finnish packaging tax incentivized DRS participation to avoid tax; EU Single-Use Plastics Directive adds urgency</pressure>
+          <pressure type="Resource cost or scarcity" role="filter">producers motivated to avoid packaging tax costs</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="Cost reduction" role="filter">avoid or minimize Finnish packaging tax</criterion>
+          <criterion type="Regulatory compliance" role="filter">meet Finnish packaging legislation requirements and EU mandates</criterion>
+          <criterion type="Emissions or resource reduction target" role="filter">recover materials at highest possible quality for reincorporation into new packaging</criterion>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Initial challenge of getting competing retailers and breweries to share sensitive production data and collaborate; antitrust considerations; ongoing need to expand the system to juice producers and other non-tax-liable sectors]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[The original DRS was run by state-owned Alko Oy before PALPA's formation. When Finland joined the EU in 1995, Alko Oy's regulatory role ended, directly prompting the formation of PALPA as a private-sector collaborative. Ekopullo, a related nonprofit, was established alongside PALPA to handle refillable packaging separately. PALPA has been operating at national scale since the late 1990s.]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Reverse vending machine network across all retail formats; centralized logistics and transport contracting; data aggregation system to share production volumes and deposit flows without exposing competitor data; processing and sorting infrastructure; regulatory reporting capability for Finnish tax authorities]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[The user returns an empty beverage can, PET bottle, or glass bottle to a reverse vending machine in any authorized grocery store or service station, and in return receives a full deposit refund (EUR 0.10-0.40), while the producer closes the Deposit-return loop by routing collected containers through PALPA's centralized sorting, transport, and recycling infrastructure to be reprocessed as high-quality feedstock for new beverage packaging.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for national or regional deposit-return system design; most relevant for beverage producers facing packaging tax liability or DRS mandate, and for cooperative governance models across competing industry players.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="CPR-003">
+      <title role="prose">A Reusable Drinks Bottle Design for Multiple Brands: Universal Bottle</title>
+      <url role="id">a-reusable-drinks-bottle-design-for-multiple-brands-universal-bottle</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Coca-Cola Company; Coca-Cola Bottling Partners</org_name>
+        <org_one_liner role="prose"><![CDATA[The Coca-Cola Company is one of the world's largest beverage companies, producing and distributing soft drinks in over 200 countries through a global network of bottling partners.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">Large enterprise (Coca-Cola, one of the world's largest FMCG companies)</size>
+          <industry role="filter">Food and beverage / FMCG</industry>
+          <type role="filter">B2C</type>
+        </org_profile>
+        <launch_date role="filter">2018</launch_date>
+        <maturity_stage role="filter">Growth</maturity_stage>
+        <geography role="filter">Latin America (primary); scaling to other continents</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[Coca-Cola's Universal Bottle is a standardized reusable PET plastic bottle designed to be filled with multiple soda brands across Latin America. When a consumer finishes a drink, they return the bottle to the point of sale, where producers collect, clean, and refill it, with each bottle reused up to 25 times before recycling, reducing overall plastic use by 90% per serving compared to single-use bottles. Introduced in 2018, it is Coca-Cola's fastest growing packaging format in Latin America and is being scaled to other continents.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Plastics, Retail, Business</topic_tags>
+        <circular_model_primary role="filter">Circular Inputs</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Sustainable product design</sub_model>
+          <sub_model role="filter">Take-back / gamified returns</sub_model>
+          <sub_model role="filter">Recycle / upcycle</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Technical cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Design</stage>
+          <stage role="filter">Product Use</stage>
+          <stage role="filter">End of Life</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose"><![CDATA[PET plastic bottles standardized across multiple brands and reused up to 25 times before recycling; 90% reduction in plastic use per serving vs. single-use]]></material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Single-use PET soda bottles purchased once, consumed, and disposed of, generating large volumes of plastic waste per unit of beverage sold.]]></description>
+        <inefficiency_type role="filter">Wasted end-of-life value</inefficiency_type>
+        <inefficiency_type role="filter">Unsustainable material use</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose">Beverage product sale; reusable bottle deposit system reduces packaging cost over multiple uses</revenue_model>
+        <pricing_mechanism role="prose">Flat rate (product sale); Deposit-return (consumer deposit on reusable bottle returned at point of sale)</pricing_mechanism>
+        <technology_enabler role="prose">Standardized multi-brand bottle design; in-store collection and return logistics; industrial washing and quality inspection; bottle tracking system</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: Latin American soda consumers who purchase and return bottles at local retail points. Secondary: Coca-Cola bottling partners operating the refill and return logistics]]></target_users>
+        <value_propositions role="prose"><![CDATA[90% reduction in plastic use per serving vs. single-use; cost saving through bottle reuse vs. single-use packaging procurement; consumer familiarity with return systems in Latin American markets; Coca-Cola sustainability credentials]]></value_propositions>
+        <partnerships role="prose"><![CDATA[Coca-Cola bottling partners across Latin America (return, washing, and refill operations); retail points of sale (collection hubs); Latin American governments (alignment with plastic reduction regulations)]]></partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Each bottle reused up to 25 times; 90% reduction in plastic use per serving vs. single-use; fastest growing packaging format for Coca-Cola in Latin America since 2018]]></quantified_impact>
+        <replication_model role="prose">Yes: actively scaling from Latin America to other continents</replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[Latin American plastic packaging regulations; EU Single-Use Plastics Directive (driving global Coca-Cola packaging strategy); deposit-return system legislation in relevant markets]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Regulatory / compliance pressure" role="filter">Latin American plastic regulations; EU Single-Use Plastics Directive shaping global Coca-Cola strategy</pressure>
+          <pressure type="Consumer demand shift" role="filter">growing consumer and retailer demand for sustainable beverage packaging in Latin American markets</pressure>
+          <pressure type="Resource cost or scarcity" role="filter">rising virgin PET costs and packaging waste disposal costs making reuse economically attractive at scale</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="Emissions or resource reduction target" role="filter">90% reduction in plastic use per serving</criterion>
+          <criterion type="New revenue or market access" role="filter">Universal Bottle as fastest growing format, growing market share through reuse positioning</criterion>
+          <criterion type="Regulatory compliance" role="filter">meet plastic packaging reduction requirements across Latin American markets</criterion>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Consumer behavior change to return bottles at point of sale; ensuring bottle return rates high enough to make system economics work; washing and logistics infrastructure investment; scaling the standardized bottle design across diverse retail formats in Latin America]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[Coca-Cola has operated glass bottle refill systems historically, particularly in Latin America. The Universal Bottle represents the application of refillable packaging principles to PET plastic, modernizing a historic return model for contemporary markets.]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Standardized multi-brand bottle mold design and manufacturing; industrial washing and inspection infrastructure at bottling plants; point-of-sale collection logistics; bottle deposit management; consumer communication on return process]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[The user purchases a soda in a Universal Bottle and returns the empty bottle to the point of sale, and in return receives their deposit back, while the producer closes the Deposit-return loop by collecting, washing, inspecting, and refilling the bottle up to 25 times across multiple brands before recycling it, achieving 90% reduction in plastic use per serving vs. single-use alternatives.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for a single large FMCG brand launching a proprietary reusable packaging format at scale; most relevant where the brand controls its own bottling or distribution and can drive the return loop directly.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="CPR-004">
+      <title role="prose">An Industry-Wide Shared Packaging System: Swedish Return System</title>
+      <url role="id">an-industry-wide-shared-packaging-system-swedish-return-system</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Swedish Return System (SRS); Trade Association for Grocery of Sweden; Swedish Food and Drinks Retailers Association</org_name>
+        <org_one_liner role="prose"><![CDATA[The Swedish Return System (SRS) is a B2B shared pool of reusable plastic crates and pallets established in 1997 and jointly owned by two Swedish grocery trade associations, used to deliver fresh produce across 1,500+ participating businesses.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">Large enterprise (trade association-owned, 1,500+ members)</size>
+          <industry role="filter">Food and agriculture / Logistics / Packaging</industry>
+          <type role="filter">B2B</type>
+        </org_profile>
+        <launch_date role="filter">1997</launch_date>
+        <maturity_stage role="filter">Operating at scale</maturity_stage>
+        <geography role="filter">Sweden</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[The Swedish Return System (SRS) is a B2B shared pool of reusable plastic crates and pallets used to deliver fresh produce across the Swedish food and drinks industry, established in 1997. Over 1,500 businesses participate in the system, which is jointly owned by the two main Swedish grocery trade associations. Businesses pay a user fee and/or daily rent to participate, and reusable crates circulate continuously through the supply chain rather than being disposed of after each use. Over 50% of all fresh produce in Sweden is now delivered in reusable SRS packaging.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Food and agriculture, Business, Retail</topic_tags>
+        <circular_model_primary role="filter">Sharing Platform</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Share</sub_model>
+          <sub_model role="filter">Circular supplies</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Technical cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Logistics</stage>
+          <stage role="filter">Product Use</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose"><![CDATA[Reusable plastic crates and pallets circulating continuously through the Swedish food supply chain, replacing single-use cardboard and wooden crates]]></material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Fresh produce delivered in single-use cardboard or wooden crates discarded after each delivery, generating large volumes of packaging waste and requiring continuous virgin material input.]]></description>
+        <inefficiency_type role="filter">Wasted end-of-life value</inefficiency_type>
+        <inefficiency_type role="filter">Unsustainable material use</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose">User fees and/or daily rental charges paid by participating businesses; system jointly owned by two trade associations as a nonprofit pooling model</revenue_model>
+        <pricing_mechanism role="prose">Flat rate (daily rental); Transaction fee (per-use fee)</pricing_mechanism>
+        <technology_enabler role="prose">Crate tracking and inventory management system; washing and quality inspection infrastructure; logistics coordination across 1,500+ businesses</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: Swedish food producers, distributors, and retailers participating in the shared crate pool. Secondary: Swedish consumers benefiting from a more efficient and lower-waste food supply chain]]></target_users>
+        <value_propositions role="prose"><![CDATA[Elimination of single-use packaging cost for each delivery; reduced waste disposal burden; standardized crates improving handling efficiency; collective infrastructure unavailable to any individual company; over 50% of Swedish fresh produce delivered more sustainably]]></value_propositions>
+        <partnerships role="prose"><![CDATA[Trade Association for Grocery of Sweden (co-owner); Swedish Food and Drinks Retailers Association (co-owner); 1,500+ participating food businesses; crate washing and logistics service providers]]></partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Over 50% of all fresh produce in Sweden delivered in reusable SRS packaging; 1,500+ participating businesses; system founded 1997 and operating continuously for 25+ years]]></quantified_impact>
+        <replication_model role="prose"><![CDATA[Yes: the SRS model has been studied internationally as a model for B2B shared packaging systems in food supply chains]]></replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[Swedish and EU packaging waste reduction legislation; EU Packaging and Packaging Waste Regulation (driving demand for reusable B2B packaging systems)]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Regulatory / compliance pressure" role="filter">Swedish and EU packaging waste legislation; EU Packaging and Packaging Waste Regulation</pressure>
+          <pressure type="Resource cost or scarcity" role="filter">cost of single-use packaging at scale for 1,500+ businesses making shared reusable system economically attractive</pressure>
+          <pressure type="Internal mandate or leadership commitment" role="filter">trade association decision to establish shared infrastructure as a collective benefit</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="Cost reduction" role="filter">eliminate single-use crate cost for 1,500+ member businesses</criterion>
+          <criterion type="Emissions or resource reduction target" role="filter">replace single-use cardboard and wooden crates for over 50% of Swedish fresh produce</criterion>
+          <criterion type="Supply chain resilience" role="filter">standardized shared crate pool improving handling efficiency across the supply chain</criterion>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Managing crate loss and damage across 1,500+ businesses; maintaining washing and quality standards; coordinating return logistics across a complex multi-party supply chain; ensuring all participating businesses return crates promptly]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[SRS was established in 1997 as a deliberate industry-wide circular infrastructure investment. The system has been operating for 25+ years, representing a mature, fully scaled circular economy model rather than a pilot.]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Shared crate pool management and tracking across 1,500+ businesses; industrial washing and quality inspection facilities; return logistics coordination; trade association governance and membership management; crate replacement and capital investment planning]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[The user (food business) loads fresh produce into SRS reusable crates for delivery, and in return accesses standardized, clean packaging at a daily rental fee without purchasing or disposing of single-use crates, while the producer closes the Sharing platform loop by pooling crates across 1,500+ businesses, washing, inspecting, and recirculating them continuously rather than disposing of packaging after each delivery.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for B2B supply chain packaging shared across a trade sector; most relevant for food, agriculture, or logistics organizations exploring pooled asset models governed by a trade association or cooperative.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="CPR-005">
+      <title role="prose">Beyond the Bag: A Collective Effort to Drive Customers Away from Single-Use Bags</title>
+      <url role="id">beyond-the-bag-a-collective-effort-to-drive-customers-away-from-single-use</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Consortium to Reinvent the Retail Bag (Closed Loop Partners' Center for the Circular Economy); CVS Health; Target; Walmart; Kroger; Dollar Tree; Meijer</org_name>
+        <org_one_liner role="prose"><![CDATA[Closed Loop Partners is a US-based investment firm and innovation center that funds and develops circular economy solutions across consumer goods, retail, and waste sectors.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">Large enterprise</size>
+          <industry role="filter">Retail</industry>
+          <type role="filter">B2C</type>
+        </org_profile>
+        <launch_date role="filter">2020</launch_date>
+        <maturity_stage role="filter">Growth</maturity_stage>
+        <geography role="filter">United States (Denver, Colorado; Tucson, Arizona; Southern California, expanded 2025)</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[A consortium of major US retailers convened by Closed Loop Partners piloted and then scaled a multi-city campaign to shift shoppers away from single-use plastic bags. After years of testing reuse solutions including borrow-a-bag schemes and incentive programs, the coalition distilled its findings into a unified Bring Your Own Bag campaign deployed across over 375 stores in two cities. The campaign used shared signage, cashier prompts, and community outreach to make reusable bag behavior habitual.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Plastics, Retail, Business</topic_tags>
+        <circular_model_primary role="filter">Circular Inputs</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Sustainable product design</sub_model>
+          <sub_model role="filter">Share</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Technical cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Product Use</stage>
+          <stage role="filter">End of Life</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose">Single-use plastic shopping bags</material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose">Single-use plastic bags dispensed at checkout and discarded after each use, with less than 10% recycled globally.</description>
+        <inefficiency_type role="filter">Wasted end-of-life value</inefficiency_type>
+        <inefficiency_type role="filter">Unexploited customer engagement</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose"><![CDATA[Funded by member retailer contributions; CVS, Target, and Walmart collectively committed over USD 15 million to launch; no direct revenue model: initiative is cost-avoidance and brand value driven]]></revenue_model>
+        <pricing_mechanism role="prose">Not applicable: funded by retailer contributions, not a consumer-facing pricing model</pricing_mechanism>
+        <technology_enabler role="prose">Digital data collection and onsite observation; open-source campaign assets distributed digitally; no primary enabling technology</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: everyday grocery and retail shoppers in US cities. Secondary: city governments, nonprofits, and local business groups as co-distributors of the campaign]]></target_users>
+        <value_propositions role="prose">Reduced per-store bag costs; regulatory compliance in fee-mandated cities; shared consumer behavior shift that no single brand could achieve alone</value_propositions>
+        <partnerships role="prose"><![CDATA[OpenIDEO (innovation challenge platform); city governments of Denver and Tucson (policy enforcement and community outreach); local nonprofits and business groups (campaign amplification); Closed Loop Partners / Center for the Circular Economy (secretariat and research)]]></partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Nearly 5% reduction in single-use bag use over three months across two cities (2.1 million people reached); 11% reduction in Denver; 2% in Tucson; equivalent to preventing ~9.5 million single-use bags annually]]></quantified_impact>
+        <replication_model role="prose"><![CDATA[Yes: open-source campaign assets (signage, social media, training); scaling to Southern California with ~1,000 stores in 2025-2026]]></replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[Denver, Colorado: USD 0.10 single-use bag fee (municipal ordinance): measurably amplified campaign impact (11% vs. 2% reduction)]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Regulatory / compliance pressure" role="filter">municipal bag bans and fee legislation prompted retailer action</pressure>
+          <pressure type="Consumer demand shift" role="filter">consumer sustainability expectations cited</pressure>
+          <pressure type="Competitor or market pressure" role="filter">collective action needed to shift systemic consumer behavior</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="Emissions or resource reduction target" role="filter">prevent ~9.5 million single-use bags annually</criterion>
+          <criterion type="Brand differentiation" role="filter">shared credibility and market signal</criterion>
+          <criterion type="Cost reduction" role="filter">lower per-store bag costs</criterion>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Consumer behavior change is slow without policy backup; ensuring cashier prompt consistency across hundreds of stores; achieving near-term behavior change vs. long-term habit formation]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[The Consortium spent 2020-2022 in innovation and piloting phase before pivoting to the tactical campaign in 2023. The borrow-a-bag model was tested and found less scalable than simpler behavioral nudges. The Playbook was developed as a distillation of learnings before the campaign launched. Next step is scaling to Southern California (~1,000 stores).]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Unified cross-retailer campaign coordination infrastructure; open-source asset library; onsite data collection and observation methodology; cashier training protocols; city-level government and nonprofit partnerships]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[The user brings their own bag or declines a single-use bag at checkout prompted by in-store signage and cashier reminders, and in return saves money (in fee markets) and participates in a visible community norm, while the producer closes the circular inputs loop by replacing single-use bag demand with reusable alternatives through coordinated cross-retailer behavior change infrastructure at city scale.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for retailer consortia or collective consumer behavior-change campaigns; most relevant in markets with bag fee or ban legislation, where shared signage and cashier prompts are sufficient infrastructure.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="CPR-006">
+      <title role="prose">Pay for the Product, Not the Packaging: Algramo</title>
+      <url role="id">pay-for-the-product-not-the-packaging-algramo</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Algramo</org_name>
+        <org_one_liner role="prose"><![CDATA[Algramo is a Chilean company that operates a smart refill system enabling consumers to refill RFID-chipped reusable containers with household cleaning and personal care products at app-connected dispensing machines, eliminating single-use packaging.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">SME</size>
+          <industry role="filter">Retail technology / FMCG / Packaging</industry>
+          <type role="filter">B2B2C</type>
+        </org_profile>
+        <launch_date role="filter">Not stated</launch_date>
+        <maturity_stage role="filter">Growth</maturity_stage>
+        <geography role="filter">Chile (Santiago); United States (New York); Indonesia (Jakarta)</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[Algramo is a Chilean company that operates a smart refill system enabling consumers to refill reusable packaging with household cleaning and personal care products using RFID-chipped containers and app-connected dispensing machines. Customers credit an account via a mobile app and bring their smart container to an Algramo dispenser, which recognizes the container and dispenses the exact quantity desired. Serving brands including Quix, Omo, Pinesol, and Clorox, Algramo eliminates single-use packaging at point of sale while making products accessible in micro-quantities to low-income consumers.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Plastics, Retail, Business</topic_tags>
+        <circular_model_primary role="filter">Sharing Platform</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Pay-per-use</sub_model>
+          <sub_model role="filter">Take-back / gamified returns</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Technical cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Product Use</stage>
+          <stage role="filter">End of Life</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose"><![CDATA[Single-use household product packaging eliminated through reusable RFID-chipped container and smart dispensing refill system]]></material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose">Household cleaning and personal care products sold in single-use plastic packaging purchased repeatedly, generating large plastic waste volumes particularly in emerging market contexts.</description>
+        <inefficiency_type role="filter">Unsustainable material use</inefficiency_type>
+        <inefficiency_type role="filter">Wasted end-of-life value</inefficiency_type>
+        <inefficiency_type role="filter">Unexploited customer engagement</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose">Transaction commission on each dispensed product refill; hardware leasing or sale of dispensing machines to retail partners; potential brand partnership fees from FMCG companies</revenue_model>
+        <pricing_mechanism role="prose">Pay-per-use (charged per quantity dispensed)</pricing_mechanism>
+        <technology_enabler role="prose">RFID-chipped reusable containers; smart dispensing machines with app connectivity; mobile payment and account credit system</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: low-to-middle income consumers in Chile, Indonesia, and the US seeking affordable access to household products in micro-quantities without paying a packaging premium. Secondary: FMCG brands seeking to offer products through a plastic-free channel]]></target_users>
+        <value_propositions role="prose"><![CDATA[Pay only for product: no packaging cost; access products in micro-quantities matching actual purchase power; eliminate single-use plastic from household product consumption; convenience of app-based payment and automatic container recognition]]></value_propositions>
+        <partnerships role="prose"><![CDATA[Quix, Omo, Pinesol, Clorox (FMCG brand partners supplying products for dispensing); retail partners hosting dispensing machines; mobile payment providers; impact investors]]></partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose">Over 250,000 packaging units put into market in 2020, all 100% reusable</quantified_impact>
+        <replication_model role="prose">Yes: Algramo has expanded from Chile to New York and Jakarta, demonstrating active international replication</replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose">Chilean plastic bag and packaging regulations; US and Indonesian plastic pollution policies; growing municipal plastic reduction mandates</regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Regulatory / compliance pressure" role="filter">plastic packaging regulations in Chile, US, and Indonesia</pressure>
+          <pressure type="Consumer demand shift" role="filter">consumer demand for lower-cost product access without packaging premium, particularly in emerging markets</pressure>
+          <pressure type="Internal mandate or leadership commitment" role="filter">Algramo founded to address the social equity dimension of single-use packaging costs for low-income consumers</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="New revenue or market access" role="filter">build a transaction-based revenue model across three international markets</criterion>
+          <criterion type="Emissions or resource reduction target" role="filter">eliminate single-use plastic packaging from household product consumption for participating users</criterion>
+          <criterion type="Brand differentiation" role="filter">establish Algramo as the leading reuse infrastructure platform for FMCG brands globally</criterion>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Achieving sufficient dispenser network density for consumer convenience; consumer behavior change to bring container to dispenser; RFID container unit economics vs. single-use packaging cost; FMCG brand partner willingness to invest in alternative distribution channel]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[Algramo began in Chile with dry goods refill and has expanded to liquid household products and three international cities. The RFID-chipped container system represents a significant technology evolution from earlier simpler dispensing models.]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[RFID-chipped container manufacturing and distribution; smart dispensing machine hardware development and maintenance; mobile app and payment platform; FMCG brand partnership development; retail network partnerships for dispenser placement]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[The user brings their RFID-chipped Algramo container to a smart dispensing machine, selects their product and quantity via the app, and receives the exact quantity dispensed without single-use packaging, while the producer closes the Pay-per-use loop by charging only for the product consumed, eliminating the packaging cost premium, and the Deposit-return loop by keeping the smart container in continuous circulation.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for refill or dispensing models eliminating single-use packaging at point of sale; most relevant for FMCG brands targeting urban, sustainability-conscious, or low-income consumer segments via smart infrastructure rather than store redesign.]]></matching_note>
+    </entry>
+
+  </entries>
+
+</rag_knowledge_base>

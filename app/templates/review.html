@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+
+{% block title %}Review – Circular Concept{% endblock %}
+
+{% block main_class %}flex flex-col items-center justify-start min-h-[calc(100vh-65px)] px-4 py-12{% endblock %}
+
+{% block content %}
+
+<script>
+  const initialAnswers     = {{ answers | tojson }};
+  const initialConfidences = {{ confidences | tojson }};
+  const orgName            = {{ org_name | tojson }};
+</script>
+
+<div class="w-full max-w-xl" x-data="reviewData()" x-init="init()">
+
+  <template x-if="orgName">
+    <p class="text-xs font-semibold uppercase tracking-widest text-terra-amber text-center mb-2" x-text="orgName"></p>
+  </template>
+  <h1 class="font-serif text-3xl font-semibold text-terra-green mb-2 text-center">Review your answers</h1>
+  <p class="text-terra-muted text-sm text-center mb-10">
+    <span x-show="orgName">Pre-filled by research agent. Edit any answer before generating.</span>
+    <span x-show="!orgName">Click the pencil to edit any answer before generating.</span>
+  </p>
+
+  <form method="POST" action="/generate" @submit.prevent="handleSubmit($event)">
+
+    <!-- Hidden inputs synced with Alpine state -->
+    <input type="hidden" name="q1" :value="answers.q1">
+    <input type="hidden" name="q2" :value="answers.q2">
+    <input type="hidden" name="q3" :value="answers.q3">
+    <input type="hidden" name="q4" :value="answers.q4">
+    <input type="hidden" name="q5" :value="answers.q5">
+    <input type="hidden" name="n_concepts" :value="n_concepts">
+
+    <!-- Answer cards -->
+    <div class="space-y-4 mb-10">
+
+      <template x-for="(q, key) in questions" :key="key">
+        <div class="bg-white rounded-[12px] border border-terra-border shadow-terra p-6">
+
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-semibold uppercase tracking-widest text-terra-amber" x-text="q.label"></span>
+                <template x-if="confidences[key]">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs px-2 py-0.5 rounded-full font-medium"
+                      :class="{
+                        'bg-green-50 text-green-700':  confidences[key] === 'high',
+                        'bg-amber-50 text-amber-700':  confidences[key] === 'medium',
+                        'bg-red-50   text-red-600':    confidences[key] === 'low',
+                      }"
+                      x-text="confidences[key] + ' confidence'"></span>
+
+                    <!-- Info icon + tooltip -->
+                    <div class="relative group">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.8" stroke="currentColor"
+                        class="w-3.5 h-3.5 text-terra-muted cursor-help">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                      </svg>
+                      <div class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-56 z-10
+                                  invisible group-hover:visible opacity-0 group-hover:opacity-100
+                                  transition-opacity duration-150 pointer-events-none">
+                        <div class="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 leading-relaxed shadow-lg"
+                          x-text="confidenceTooltip(confidences[key])"></div>
+                        <div class="mx-auto w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-900"></div>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+              <p class="text-sm font-semibold text-terra-green mb-3 leading-snug" x-text="q.title"></p>
+
+              <!-- Display mode -->
+              <p x-show="!editing[key]"
+                class="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap"
+                x-text="answers[key] || '—'"></p>
+
+              <!-- Edit mode -->
+              <textarea x-show="editing[key]"
+                x-model="answers[key]"
+                rows="4"
+                class="w-full rounded-xl bg-terra-cream border border-terra-border px-4 py-3 text-sm
+                       text-gray-700 resize-none transition-colors duration-150"
+                @keydown.escape="editing[key] = false"></textarea>
+            </div>
+
+            <!-- Pencil / Done toggle -->
+            <button type="button"
+              @click="editing[key] = !editing[key]"
+              class="flex-shrink-0 mt-0.5 p-1.5 rounded-lg text-terra-muted hover:text-terra-green hover:bg-terra-cream-dark transition-colors duration-150">
+              <!-- Pencil icon -->
+              <svg x-show="!editing[key]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
+              </svg>
+              <!-- Check icon -->
+              <svg x-show="editing[key]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="2" stroke="currentColor" class="w-4 h-4 text-terra-green">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+            </button>
+          </div>
+
+        </div>
+      </template>
+
+    </div>
+
+    <!-- Number of concepts -->
+    <div class="bg-white rounded-[12px] border border-terra-border shadow-terra p-6 mb-8">
+      <p class="text-sm font-semibold text-terra-green mb-1">Number of concepts to generate</p>
+      <p class="text-xs text-terra-muted mb-4">Recommended: 3–5 &nbsp;·&nbsp; Maximum: 8</p>
+      <div class="flex items-center gap-4">
+        <button type="button"
+          @click="if (n_concepts > 1) n_concepts--"
+          :disabled="n_concepts <= 1"
+          class="w-9 h-9 rounded-lg border border-terra-border flex items-center justify-center
+                 text-terra-green hover:bg-terra-cream-dark disabled:opacity-30 disabled:cursor-not-allowed
+                 transition-colors duration-150 font-semibold text-lg">−</button>
+        <span class="font-serif text-3xl font-semibold text-terra-green w-8 text-center" x-text="n_concepts"></span>
+        <button type="button"
+          @click="if (n_concepts < 8) n_concepts++"
+          :disabled="n_concepts >= 8"
+          class="w-9 h-9 rounded-lg border border-terra-border flex items-center justify-center
+                 text-terra-green hover:bg-terra-cream-dark disabled:opacity-30 disabled:cursor-not-allowed
+                 transition-colors duration-150 font-semibold text-lg">+</button>
+      </div>
+    </div>
+
+    <!-- Generate button -->
+    <div class="flex items-center justify-between">
+      <a href="/start-over" class="text-sm text-terra-muted hover:text-terra-green transition-colors duration-150">
+        ← Start over
+      </a>
+      <button type="submit"
+        :disabled="anyEditing"
+        :class="anyEditing
+          ? 'opacity-40 cursor-not-allowed bg-terra-amber'
+          : 'bg-terra-amber hover:bg-[#5e4d27] cursor-pointer'"
+        class="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-base text-white
+               transition-colors duration-200 shadow-terra">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
+        </svg>
+        Generate concepts
+      </button>
+    </div>
+
+    <!-- Loading overlay -->
+    <div class="fixed inset-0 bg-terra-cream/90 flex flex-col items-center justify-center z-50 transition-opacity duration-200"
+      :class="loading ? 'opacity-100' : 'opacity-0 pointer-events-none'">
+
+      <p class="font-serif text-2xl font-semibold text-terra-green mb-1">Generating concepts…</p>
+      <p class="text-sm text-terra-muted mb-8">This takes about 2–3 minutes</p>
+
+      <!-- Per-concept progress bars -->
+      <div class="w-full max-w-xs space-y-4">
+        <template x-for="item in progressItems" :key="item.number">
+          <div class="flex items-center gap-3">
+
+            <span class="text-sm text-terra-muted w-20 flex-shrink-0 text-right"
+              x-text="'Concept ' + item.number"></span>
+
+            <div class="flex-1 h-1.5 bg-terra-border rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500"
+                :class="item.state === 'waiting'
+                  ? 'w-0'
+                  : item.state === 'generating'
+                    ? 'w-full bg-terra-green animate-pulse'
+                    : 'w-full bg-terra-green'">
+              </div>
+            </div>
+
+            <span class="text-xs w-20 flex-shrink-0"
+              :class="item.state === 'complete' ? 'text-terra-green font-semibold' : 'text-terra-muted'"
+              x-text="item.state === 'waiting' ? 'Waiting' : item.state === 'generating' ? 'Generating…' : 'Done ✓'">
+            </span>
+
+          </div>
+        </template>
+      </div>
+
+      <!-- Error state -->
+      <template x-if="errorMessage">
+        <div class="mt-8 text-center">
+          <p class="text-sm text-red-600 mb-2" x-text="errorMessage"></p>
+          <a href="/review" class="text-sm text-terra-muted hover:text-terra-green transition-colors duration-150">← Try again</a>
+        </div>
+      </template>
+
+    </div>
+
+  </form>
+</div>
+
+{% block scripts %}
+<script>
+  function reviewData() {
+    return {
+      answers:         { ...initialAnswers },
+      confidences:     { ...initialConfidences },
+      orgName:         orgName,
+      editing:         { q1: false, q2: false, q3: false, q4: false, q5: false },
+      n_concepts:      3,
+      loading:         false,
+      conceptProgress: [],   // 'waiting' | 'generating' | 'complete' per concept index
+      errorMessage:    null,
+      questions: {
+        q1: { label: 'Organization',          title: 'What does the organization make or do?' },
+        q2: { label: 'Waste & Inefficiency',  title: 'Where does waste, inefficiency, or end-of-life live in their value chain?' },
+        q3: { label: 'Pressure to Change',    title: 'What pressure is driving the need to change?' },
+        q4: { label: 'Exclusion Filter',      title: 'What circular territory have they already explored?' },
+        q5: { label: 'Success Criteria',      title: 'What does a successful outcome look like for them?' },
+      },
+
+      init() {
+        // Auto-open editing for answers with low confidence or empty answers from research
+        if (this.orgName) {
+          for (const key of Object.keys(this.questions)) {
+            if (!this.answers[key] || this.confidences[key] === 'low') {
+              this.editing[key] = true;
+            }
+          }
+        }
+      },
+
+      get anyEditing() {
+        return Object.values(this.editing).some(v => v);
+      },
+
+      confidenceTooltip(level) {
+        return {
+          high:   'Direct evidence from company sources — annual reports, press releases, or sustainability filings.',
+          medium: 'Inferred from trade press, industry news, or indirect sources. Worth verifying.',
+          low:    'Limited direct evidence found. Based on general industry patterns — review and edit this answer.',
+        }[level] || '';
+      },
+
+      get progressItems() {
+        return Array.from({ length: this.n_concepts }, (_, i) => ({
+          number: i + 1,
+          state:  this.conceptProgress[i] || 'waiting',
+        }));
+      },
+
+      async handleSubmit(event) {
+        this.loading         = true;
+        this.errorMessage    = null;
+        this.conceptProgress = Array(this.n_concepts).fill('waiting');
+
+        const formData = new FormData(event.target);
+
+        try {
+          const response = await fetch('/generate-stream', { method: 'POST', body: formData });
+          const reader   = response.body.getReader();
+          const decoder  = new TextDecoder();
+          let   buffer   = '';
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop();
+
+            for (const line of lines) {
+              if (!line.startsWith('data: ')) continue;
+              const ev = JSON.parse(line.slice(6));
+
+              if (ev.type === 'concept_start') {
+                this.conceptProgress[ev.number - 1] = 'generating';
+                this.conceptProgress = [...this.conceptProgress];
+              } else if (ev.type === 'concept_end') {
+                this.conceptProgress[ev.number - 1] = 'complete';
+                this.conceptProgress = [...this.conceptProgress];
+              } else if (ev.type === 'done') {
+                window.location.href = '/concepts';
+              } else if (ev.type === 'error') {
+                this.errorMessage = ev.message || 'Something went wrong.';
+                this.loading = false;
+              }
+            }
+          }
+        } catch (err) {
+          this.errorMessage = 'Connection failed. Please try again.';
+          this.loading = false;
+        }
+      },
+    }
+  }
+</script>
+{% endblock %}
+
+{% endblock %}

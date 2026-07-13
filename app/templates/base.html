@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Circular Concept{% endblock %}</title>
+
+  {% if posthog.enabled %}
+  <!-- PostHog: product analytics, automatic pageviews, and AI observability -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init os ds Ie us vs ss ls capture calculateEventProperties register register_once register_for_session unregister unregister_for_session ws getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty bs ps createPersonProfile setInternalOrTestUser ys es $s opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing cs debug M gs getPageViewId captureTraceFeedback captureTraceMetric Qr".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('{{ posthog.key }}', {
+      api_host: '{{ posthog.host }}',
+      defaults: '2026-01-30',
+    });
+    posthog.identify('{{ distinct_id }}');
+  </script>
+  {% endif %}
+
+  <!-- Google Fonts: Literata (serif headlines) + Nunito Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- DaisyUI (must load before Tailwind CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4/dist/full.min.css" rel="stylesheet" />
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            terra: {
+              green:  '#4a7c59',
+              cream:  '#faf6f0',
+              'cream-dark': '#f0ebe2',
+              amber:  '#705c30',
+              muted:  '#8a8278',
+              border: '#ddd8d0',
+            }
+          },
+          fontFamily: {
+            serif: ['Literata', 'Georgia', 'serif'],
+            sans:  ['Nunito Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            terra: '0 4px 20px rgba(46, 50, 48, 0.06)',
+          },
+        }
+      }
+    }
+  </script>
+
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+
+  <!-- Alpine.js -->
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+  <style>
+    body { font-family: 'Nunito Sans', sans-serif; }
+    h1, h2, h3 { font-family: 'Literata', serif; }
+    textarea:focus { outline: none; box-shadow: 0 0 0 3px rgba(74,124,89,0.25); border-color: #4a7c59; }
+  </style>
+
+  {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen bg-terra-cream">
+
+  <nav class="bg-terra-cream border-b border-terra-border px-6 py-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 text-terra-green font-semibold tracking-wide no-underline group">
+      <!-- Heroicon: arrow-path (recycling) -->
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+        stroke-width="1.8" stroke="currentColor"
+        class="w-5 h-5 transition-transform duration-500 group-hover:rotate-180">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+      </svg>
+      Circular Concept
+    </a>
+    {% block nav_right %}{% endblock %}
+  </nav>
+
+  <main class="{% block main_class %}container mx-auto px-4 py-12{% endblock %}">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

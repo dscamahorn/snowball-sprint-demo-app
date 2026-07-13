@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- rag_version: increment when entries are added, removed, or corrected -->
+<!-- schema_version: increment when field names, structure, or controlled vocabulary change -->
+<!-- Controlled vocabulary for classification fields: see rag_registry_circular_economy.md, Section 4 -->
+<!-- role attribute values: filter=structured metadata for pre-filtering; prose=free text for semantic embedding; id=identifier, excluded from both -->
+<!-- classification fields (role="filter") are the sole pre-filter layer; retrieval_tags have been removed as redundant -->
+<!-- on <pressure> and <criterion> elements, role="filter" means: filter on the @type attribute; element text content is supplementary prose context -->
+<rag_knowledge_base
+  rag_id="food-waste-upcycling"
+  rag_version="1.0"
+  schema_version="1.4"
+  created="2026-04-21"
+  min_confidence="High"
+  entry_id_prefix="FWU"
+  topic_domain="Food Waste Upcycling"
+  source_domain="Circular Economy Examples"
+  registry="rag_registry_circular_economy.md">
+
+  <entries>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="FWU-001">
+      <title role="prose">Brewing Beer from Surplus Bread</title>
+      <url role="id">brewing-beer-from-surplus-bread</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Toast Ale</org_name>
+        <org_one_liner role="prose"><![CDATA[Toast Ale is a UK craft beer company that replaces approximately one-third of the malted grain in its brewing process with surplus bread collected from bakeries and food businesses, donating all profits to food waste charities.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">SME</size>
+          <industry role="filter">Food &amp; Beverage / Craft Beer</industry>
+          <type role="filter">B2C</type>
+        </org_profile>
+        <launch_date role="filter">2016</launch_date>
+        <maturity_stage role="filter">Growth</maturity_stage>
+        <geography role="filter">United Kingdom (primary); international licensing partnerships</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[Toast Ale replaces approximately one-third of the malted grain in its brewing process with surplus bread collected from bakeries and food businesses. By upcycling a high-volume food waste stream, where 44% of all bread in the UK is wasted, into a premium craft beer ingredient, Toast Ale creates commercial value from waste while reducing the agricultural land, water, and energy needed for conventional malted grain production. The company shares its recipe openly to encourage replication and donates 100% of profits to Feedback, a food waste charity campaigning for systemic change. The open-source recipe model allows other breweries globally to adopt the same process without licensing fees, amplifying environmental impact beyond Toast Ale's own production volume.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Food &amp; Agriculture, Business</topic_tags>
+        <circular_model_primary role="filter">Resource Recovery</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Waste-as-resource (industrial symbiosis)</sub_model>
+          <sub_model role="filter">Recycle / upcycle</sub_model>
+          <sub_model role="filter">Circular supplies</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Biological cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Production</stage>
+          <stage role="filter">End of Life</stage>
+          <stage role="filter">Cross-stage</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose"><![CDATA[Surplus bread from bakeries and food businesses replaces approximately one-third of malted grain in beer brewing: biological waste-to-value loop]]></material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Surplus bread sent to landfill or anaerobic digestion with no commercial value recovered, while breweries continue to source 100% virgin malted grain as a production input.]]></description>
+        <inefficiency_type role="filter">Wasted end-of-life value</inefficiency_type>
+        <inefficiency_type role="filter">Unsustainable material use</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose"><![CDATA[Product sales (craft beer sold via retail and online channels); licensing of open-source recipe to partner breweries; 100% of profit donated to food waste charity]]></revenue_model>
+        <pricing_mechanism role="prose">Premium product pricing (craft beer positioning)</pricing_mechanism>
+        <technology_enabler role="prose">Standard brewing infrastructure adapted for bread-based grain substitution; open-source recipe documentation enabling replication</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: UK and international craft beer consumers. Secondary: Bakeries and food businesses supplying surplus bread; independent breweries adopting the open-source recipe]]></target_users>
+        <value_propositions role="prose"><![CDATA[Consumers: premium craft beer with a transparent food-waste-reduction story. Bakeries: a dignified, commercial-channel alternative to waste disposal. Partner breweries: a ready-made circular supply chain model with no IP barrier.]]></value_propositions>
+        <partnerships role="prose">Feedback (food waste charity and profit recipient); bakery supply partners; international brewery licensees</partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[44% of UK bread is wasted; Toast Ale's model diverts surplus bread into a premium commercial ingredient, replacing a portion of virgin malted grain and reducing associated land, water, and energy use. Recipe shared openly to maximize replication impact.]]></quantified_impact>
+        <replication_model role="prose">Open-source recipe sharing actively encourages direct replication by any brewery globally; no licensing fee or exclusivity barrier.</replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[UK food waste reduction targets; Courtauld Commitment voluntary framework; general EU and UK sustainability reporting expectations create commercial incentive for suppliers to demonstrate waste diversion.]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Consumer demand shift" role="filter"/>
+          <pressure type="Internal mandate or leadership commitment" role="filter"/>
+          <pressure type="Regulatory / compliance pressure" role="filter">food waste targets</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="Emissions or resource reduction target" role="filter"/>
+          <criterion type="Brand differentiation" role="filter"/>
+          <criterion type="New revenue or market access" role="filter"/>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Consistent supply of quality surplus bread; maintaining food-safety certification for upcycled inputs; consumer education on upcycled-ingredient products; scaling collection logistics as production grows.]]></barriers_challenges>
+        <circular_maturity_prior role="prose">Low (most craft breweries source 100% virgin malt with no waste-input integration)</circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Relationships with local bakeries or food businesses for reliable surplus bread supply; food-safety certification for upcycled grain substitutes; basic supply chain adaptation within existing brewing infrastructure; brand storytelling capability around waste provenance.]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[A bakery or food business identifies surplus bread as a reliable by-product stream and partners with a local craft brewery to supply it as a malted grain substitute; the brewery produces a co-branded beer that carries the surplus-bread story on pack; both parties share the waste-diversion metric in their sustainability reporting, and the brewery optionally adopts the open-source Toast Ale recipe to reduce development costs and time to market.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for food and beverage companies with an identifiable surplus input stream and craft or premium positioning; also relevant for any organization exploring open-source circular model sharing.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="FWU-002">
+      <title role="prose">Radical Transparency in Collaborations to Eradicate Food Waste</title>
+      <url role="id">radical-transparency-in-collaborations-to-eradicate-food-waste-rescued</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Rescued</org_name>
+        <org_one_liner role="prose"><![CDATA[Rescued is a UK food company that sources surplus and cosmetically rejected food from farmers and sells it to consumers via a subscription box model, applying radical transparency to disclose the exact origin and reason for surplus of every product.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">SME / Startup</size>
+          <industry role="filter">Food &amp; Agriculture / Direct-to-Consumer</industry>
+          <type role="filter">B2C</type>
+        </org_profile>
+        <launch_date role="filter">Not stated</launch_date>
+        <maturity_stage role="filter">Growth</maturity_stage>
+        <geography role="filter">United Kingdom</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[Rescued sources surplus and rejected food from farmers and producers, specifically produce discarded due to cosmetic imperfection, overproduction, or market rejection, and sells it directly to consumers through a subscription box model. The company applies radical transparency, sharing the exact origin and reason for surplus of every product in each box. This transparency model builds consumer trust and creates a differentiated narrative around "ugly" or oversupplied produce. Rescued partners with farmers to create a reliable commercial channel for food that would otherwise be ploughed back into fields or sent to anaerobic digestion, providing farmers with additional revenue and consumers with reduced-price food. The subscription model creates predictable demand that helps farmers plan surplus diversion in advance, rather than reacting to rejection after harvest.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Food &amp; Agriculture, Business</topic_tags>
+        <circular_model_primary role="filter">Resource Recovery</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Waste-as-resource (industrial symbiosis)</sub_model>
+          <sub_model role="filter">Recycle / upcycle</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Biological cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Distribution</stage>
+          <stage role="filter">Product Use</stage>
+          <stage role="filter">End of Life</stage>
+          <stage role="filter">Cross-stage</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose"><![CDATA[Surplus and cosmetically imperfect food from farms (fruits, vegetables, and other produce that would otherwise go to waste): biological waste-to-consumer loop]]></material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Cosmetically imperfect or surplus farm produce rejected by retailers and either ploughed back into fields, sent to anaerobic digestion, or sent to landfill, with no commercial value recovered and farmers absorbing the loss.]]></description>
+        <inefficiency_type role="filter">Wasted end-of-life value</inefficiency_type>
+        <inefficiency_type role="filter">Unexploited customer engagement</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose">Subscription box sales (direct-to-consumer, recurring revenue); farmer supply partnerships</revenue_model>
+        <pricing_mechanism role="prose">Subscription pricing (regular delivery cadence at a discount to conventional retail)</pricing_mechanism>
+        <technology_enabler role="prose">Direct-to-consumer e-commerce and subscription management platform; provenance tracking to support radical transparency labeling</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: UK consumers seeking reduced-price, sustainably sourced food with a transparent provenance story. Secondary: Farmers and producers with surplus or cosmetically rejected produce seeking a commercial diversion channel.]]></target_users>
+        <value_propositions role="prose"><![CDATA[Consumers: affordable food with a verified food-waste-reduction story and full provenance transparency. Farmers: reliable commercial revenue from produce that would otherwise be wasted.]]></value_propositions>
+        <partnerships role="prose">UK farmers and agricultural producers (surplus supply); logistics and cold-chain partners for subscription box delivery</partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Creates a commercial market for produce that would otherwise be ploughed back into fields or sent to anaerobic digestion; provides farmers with additional revenue on waste streams; reduces consumer food spend relative to conventional retail.]]></quantified_impact>
+        <replication_model role="prose">Direct replication possible for any direct-to-consumer food startup with access to a farm surplus supply network; subscription model and transparency layer are the core differentiators.</replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[UK food waste reduction commitments; Courtauld Commitment; WRAP food waste targets; growing retailer sustainability reporting requirements that create pressure on supply chains to demonstrate waste diversion.]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Consumer demand shift" role="filter"/>
+          <pressure type="Regulatory / compliance pressure" role="filter">food waste targets</pressure>
+          <pressure type="Internal mandate or leadership commitment" role="filter"/>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="New revenue or market access" role="filter"/>
+          <criterion type="Brand differentiation" role="filter"/>
+          <criterion type="Emissions or resource reduction target" role="filter"/>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Maintaining consistent supply of quality surplus produce across seasons; logistics and cold-chain cost for subscription delivery; consumer retention in the subscription model; educating consumers on cosmetic imperfection as no indicator of edibility.]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[Low (most farm surplus goes to waste streams or low-value feed; direct-to-consumer surplus channels are nascent)]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Reliable farm surplus supply network with forward supply planning capability; subscription e-commerce and logistics infrastructure; provenance tracking and storytelling capability; consumer acquisition and retention for subscription model.]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[A farmer or agricultural cooperative with predictable surplus or cosmetically rejected produce partners with a direct-to-consumer platform that curates weekly or bi-weekly subscription boxes; each box carries item-level provenance disclosure explaining why each product was surplus; consumers pay a discounted subscription price and receive a transparent impact summary per delivery, while the farmer receives a reliable commercial revenue stream on produce that would otherwise be wasted.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for direct-to-consumer food startups, farm cooperatives, or retailers seeking a subscription-based surplus diversion channel with a consumer transparency narrative.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="FWU-003">
+      <title role="prose">Alternative Meat Made from Food By-Products</title>
+      <url role="id">planetarians</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Planetarians</org_name>
+        <org_one_liner role="prose"><![CDATA[Planetarians uses Solid State Fermentation with fungi to convert waste carbohydrates from the vegetable oil, brewing, and distilling industries into high-protein alternative meat ingredients, turning industrial food by-products into a commercial protein source without the need for animals.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">Startup</size>
+          <industry role="filter">Food Technology / Alternative Protein</industry>
+          <type role="filter">B2B</type>
+        </org_profile>
+        <launch_date role="filter">Not stated</launch_date>
+        <maturity_stage role="filter">Early Growth</maturity_stage>
+        <geography role="filter">United States (headquarters); global food industry supply chain relevance</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[Planetarians uses Solid State Fermentation (SSF) with fungi to convert waste carbohydrates from the vegetable oil, brewing, and distilling industries into high-protein alternative meat ingredients. The company frames its value proposition as "processing animal feed into meat, without the need for animals." The fermentation process is cost-effective, leverages existing food infrastructure, and provides a circular solution to both food waste valorisation and global protein demand simultaneously. By transforming industrial food by-products into a commercially viable protein ingredient, Planetarians eliminates both the waste disposal problem for its input partners and the virgin agricultural land, water, and emissions cost of conventional alternative protein production.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Food &amp; Agriculture, Business</topic_tags>
+        <circular_model_primary role="filter">Resource Recovery</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Waste-as-resource (industrial symbiosis)</sub_model>
+          <sub_model role="filter">Circular supplies</sub_model>
+          <sub_model role="filter">Recycle / upcycle</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Biological cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Production</stage>
+          <stage role="filter">End of Life</stage>
+          <stage role="filter">Cross-stage</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose"><![CDATA[Waste carbohydrates from vegetable oil, brewing, and distilling industries converted via fungal Solid State Fermentation into alternative meat protein ingredients: industrial by-product to food ingredient loop]]></material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Industrial carbohydrate waste from food processing sent to low-value animal feed or waste streams, while the alternative protein industry simultaneously uses virgin agricultural inputs (soy, pea, wheat) to manufacture protein ingredients at high land, water, and energy cost.]]></description>
+        <inefficiency_type role="filter">Wasted end-of-life value</inefficiency_type>
+        <inefficiency_type role="filter">Unsustainable material use</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose"><![CDATA[B2B ingredient sales to food manufacturers and alternative protein brands; potential co-valorisation revenue from waste input partners (gate fee or cost-share model)]]></revenue_model>
+        <pricing_mechanism role="prose">Ingredient wholesale pricing; cost savings vs. conventional alternative protein inputs as the primary value lever for buyers</pricing_mechanism>
+        <technology_enabler role="prose">Solid State Fermentation (SSF) platform using fungi; existing food processing infrastructure adaptable for SSF at scale; fermentation process IP</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: Food manufacturers and alternative meat brands seeking lower-cost, lower-footprint protein ingredients. Secondary: Vegetable oil processors, breweries, and distilleries generating carbohydrate waste streams seeking disposal or valorisation solutions.]]></target_users>
+        <value_propositions role="prose"><![CDATA[Food manufacturers: cost-competitive, high-protein ingredient with a credible circular supply chain story. Waste generators: commercial valorisation of by-product streams that currently cost money to dispose of.]]></value_propositions>
+        <partnerships role="prose">Vegetable oil processors, breweries, and distilleries (waste input suppliers); food manufacturers and alternative protein brands (ingredient buyers); food technology accelerators and impact investors</partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Converts industrial food processing waste carbohydrates into commercial protein ingredients, displacing virgin agricultural inputs in alternative protein production; exact volume and emissions figures not stated in source.]]></quantified_impact>
+        <replication_model role="prose">Technology licensing or joint venture with food processors in adjacent geographies; SSF platform adaptable to other waste carbohydrate streams beyond current inputs.</replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[Growing regulatory and market pressure on alternative protein industry to reduce land and water footprint; food waste valorisation incentives in US and EU food policy; novel food ingredient approval pathways in key markets.]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Resource cost or scarcity" role="filter"/>
+          <pressure type="Consumer demand shift" role="filter"/>
+          <pressure type="Regulatory / compliance pressure" role="filter">novel food and waste valorisation</pressure>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="Cost reduction" role="filter"/>
+          <criterion type="New revenue or market access" role="filter"/>
+          <criterion type="Emissions or resource reduction target" role="filter"/>
+          <criterion type="Supply chain resilience" role="filter"/>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Regulatory approval for novel fermented food ingredients in target markets; scaling SSF production capacity; consumer and manufacturer acceptance of fungal fermentation-derived protein; securing reliable and consistent waste carbohydrate supply from industrial partners.]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[Low (industrial food waste streams typically have no protein recovery pathway; alternative protein inputs are predominantly virgin agricultural)]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Solid State Fermentation technology and process IP; food safety and novel ingredient regulatory capability; B2B commercial partnerships with both waste generators and food manufacturers; fermentation scale-up infrastructure.]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[An industrial food processor generating carbohydrate-rich by-products (spent grain from a brewery, defatted meal from a vegetable oil plant) enters a valorisation partnership with a fermentation technology company; the by-product stream is processed via Solid State Fermentation into a high-protein ingredient sold to alternative protein manufacturers; the food processor receives a valorisation payment or gate-fee credit instead of paying for waste disposal, while the ingredient buyer sources a lower-cost, lower-footprint protein input with a documented circular provenance.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for B2B food technology startups targeting industrial food processors as waste input partners and alternative protein manufacturers as buyers; relevant for any fermentation-based upcycling model.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="FWU-004">
+      <title role="prose">Using Every Part of the Climate-Friendly Sorghum Crop</title>
+      <url role="id">using-every-part-of-the-climate-friendly-sorghum-crop-gabanna-foodworks-and</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">Gabanna Foodworks; VORM; Springtail; Howard Koster (farmer); Rechstreex</org_name>
+        <org_one_liner role="prose"><![CDATA[Gabanna Foodworks leads a five-partner Dutch consortium that uses the entire sorghum plant, grain, stalks, and leaves, across food and non-food applications, eliminating crop waste while building commercial business models around a regenerative, climate-resilient crop.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">SME / Consortium</size>
+          <industry role="filter">Food &amp; Agriculture / Regenerative Food Systems</industry>
+          <type role="filter">B2B2C</type>
+        </org_profile>
+        <launch_date role="filter">Not stated</launch_date>
+        <maturity_stage role="filter">Pilot</maturity_stage>
+        <geography role="filter">Netherlands</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[Gabanna Foodworks, a Dutch food company and Big Food Redesign Challenge participant, leads a five-partner collaboration that uses the entire sorghum plant, grain, stalks, and leaves, across food and non-food applications to eliminate crop waste. The consortium includes real estate developer VORM, specialist wholesaler Springtail, farmer Howard Koster, and local retailer Rechstreex. Sorghum is a climate-resilient, drought-tolerant grain that improves soil structure, and the project develops business models that enable multiple parts of the crop to generate commercial value simultaneously, creating a full-loop use model for a regenerative crop. The collaboration is notable for its cross-sector partnership structure, combining food, real estate, retail, and agriculture into a single whole-plant circular model.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Food &amp; Agriculture, Biodiversity, Business</topic_tags>
+        <circular_model_primary role="filter">Circular Inputs</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Circular supplies</sub_model>
+          <sub_model role="filter">Sustainable product design</sub_model>
+          <sub_model role="filter">Waste-as-resource (industrial symbiosis)</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Biological cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">Design</stage>
+          <stage role="filter">Production</stage>
+          <stage role="filter">End of Life</stage>
+          <stage role="filter">Cross-stage</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose"><![CDATA[Sorghum crop (whole-plant use: grain for food, stalks and leaves for non-food applications); regenerative soil-improving crop replacing resource-intensive conventional grain alternatives]]></material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Conventional grain agriculture where only the grain fraction is commercialized and crop residues (stalks, leaves) are treated as agricultural waste, while farming relies on resource-intensive, non-regenerative crops with high water and input demand.]]></description>
+        <inefficiency_type role="filter">Wasted end-of-life value</inefficiency_type>
+        <inefficiency_type role="filter">Unsustainable material use</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose"><![CDATA[Multi-stream revenue across food products (grain), biomaterials or construction inputs (stalks, leaves), and potentially carbon or biodiversity credits from regenerative land management; consortium cost and revenue sharing model]]></revenue_model>
+        <pricing_mechanism role="prose">Wholesale and retail product sales across food and non-food verticals; grant and challenge-prize funding at pilot stage</pricing_mechanism>
+        <technology_enabler role="prose">Whole-plant crop processing capability for food and non-food fractions; consortium coordination and contract farming arrangements; sorghum agronomy expertise</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: Food manufacturers and consumers seeking climate-resilient grain ingredients. Secondary: Construction or materials industries seeking bio-based crop residue inputs; farmers seeking commercially viable regenerative crop alternatives.]]></target_users>
+        <value_propositions role="prose"><![CDATA[Farmers: full-crop commercial value (not just grain) from a lower-input, soil-improving crop. Food manufacturers and retailers: a verified regenerative ingredient with biodiversity and climate credentials. Non-food partners: a bio-based, locally sourced material input from agricultural by-products.]]></value_propositions>
+        <partnerships role="prose">Gabanna Foodworks (food lead); VORM (real estate / non-food application); Springtail (wholesale distribution); Howard Koster (farm / primary production); Rechstreex (retail / local market)</partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Eliminates crop residue waste from sorghum cultivation by commercializing grain, stalks, and leaves simultaneously; sorghum's drought tolerance and soil-improving properties reduce input requirements vs. conventional grains; exact volume figures not stated in source.]]></quantified_impact>
+        <replication_model role="prose"><![CDATA[Whole-plant crop model replicable for other underutilized or climate-resilient crops (hemp, miscanthus, amaranth) with multi-sector consortium partnerships linking food and non-food applications.]]></replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[EU Common Agricultural Policy reform toward regenerative and biodiversity-supporting farming practices; Dutch national nitrogen reduction targets creating demand for lower-input crop alternatives; EU Farm to Fork Strategy sustainability requirements.]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Regulatory / compliance pressure" role="filter">EU CAP reform, nitrogen reduction</pressure>
+          <pressure type="Consumer demand shift" role="filter">regenerative food</pressure>
+          <pressure type="Resource cost or scarcity" role="filter"/>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="Emissions or resource reduction target" role="filter"/>
+          <criterion type="New revenue or market access" role="filter"/>
+          <criterion type="Supply chain resilience" role="filter"/>
+          <criterion type="Brand differentiation" role="filter"/>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Developing commercially viable markets for non-food crop fractions (stalks, leaves) at scale; coordinating a multi-partner consortium across food and non-food sectors; consumer familiarity with sorghum as a food ingredient; agronomic scaling of sorghum cultivation in the Netherlands.]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[Low (crop residue waste is the norm across most grain agriculture; whole-plant commercialization is rare outside established industrial crops)]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Agronomy and crop processing expertise across food and non-food fractions; multi-sector consortium governance structure; market development capability for novel food ingredients and bio-based materials; grant and challenge-prize management at pilot stage.]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[A farmer cultivating a climate-resilient, whole-plant-use crop (sorghum, hemp, or amaranth) enters a consortium agreement with a food company, a non-food materials buyer, and a local retailer; the grain fraction is developed as a consumer food product, the stalks or leaves are sold as a bio-based material input to the non-food partner, and the farmer receives revenue from all three fractions simultaneously; the retailer co-brands the food product with the full-crop provenance story, and the consortium applies for regenerative agriculture grants to fund agronomic scale-up.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for multi-partner consortia targeting whole-crop or whole-plant commercial value across food and non-food verticals; relevant for regenerative agriculture business model design.]]></matching_note>
+    </entry>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <entry id="FWU-005">
+      <title role="prose">Making New Products from Urban Organic Waste Streams</title>
+      <url role="id">de-clique</url>
+      <confidence_score role="filter">High</confidence_score>
+
+      <organization>
+        <org_name role="id">De Clique</org_name>
+        <org_one_liner role="prose"><![CDATA[De Clique uses cycle couriers and electric vehicles to collect urban food by-products, specifically coffee grounds, orange peels, and other organic waste, as pure separated streams from Amsterdam businesses, and sells these to innovators and product manufacturers who transform them into cosmetics, food ingredients, and biomaterials.]]></org_one_liner>
+        <org_profile>
+          <size role="filter">SME / Startup</size>
+          <industry role="filter">Urban Waste Logistics / Circular Materials</industry>
+          <type role="filter">B2B</type>
+        </org_profile>
+        <launch_date role="filter">Not stated</launch_date>
+        <maturity_stage role="filter">Growth</maturity_stage>
+        <geography role="filter">Netherlands (Amsterdam)</geography>
+      </organization>
+
+      <description role="prose"><![CDATA[De Clique uses cycle couriers and electric vehicles to collect food by-products, specifically coffee grounds, orange peels, and other organic waste, as pure separated streams from Amsterdam businesses, and sells these to third-party innovators and product manufacturers who transform them into cosmetics, food ingredients, and biomaterials. The purity of each collected stream is the core value proposition: by collecting streams separately at source, De Clique preserves the chemical and material value of each by-product, making it suitable for high-value upcycling rather than mixed compost or anaerobic digestion. Currently only 2% of urban organic waste is reused in the Netherlands, representing an almost entirely untapped material supply base. De Clique's logistics model, low-emission urban collection at the point of generation, addresses the aggregation and purity problem that prevents most urban organic waste from reaching upcycling markets.]]></description>
+
+      <classification>
+        <topic_tags role="filter">Food &amp; Agriculture, Cities, Business</topic_tags>
+        <circular_model_primary role="filter">Resource Recovery</circular_model_primary>
+        <circular_sub_models>
+          <sub_model role="filter">Waste-as-resource (industrial symbiosis)</sub_model>
+          <sub_model role="filter">Recycle / upcycle</sub_model>
+          <sub_model role="filter">Circular supplies</sub_model>
+        </circular_sub_models>
+        <loop_type_emf role="filter">Biological cycle</loop_type_emf>
+        <value_chain_stage>
+          <stage role="filter">End of Life</stage>
+          <stage role="filter">Distribution</stage>
+          <stage role="filter">Cross-stage</stage>
+        </value_chain_stage>
+        <material_resource_loop role="prose"><![CDATA[Urban food by-products (coffee grounds, orange peels, organic waste) collected as pure separated streams from businesses and sold to product manufacturers: biological waste-to-value urban circular loop]]></material_resource_loop>
+      </classification>
+
+      <linear_model_replaced>
+        <description role="prose"><![CDATA[Urban organic food by-products collected as mixed waste, sent to anaerobic digestion or composting with minimal commercial value recovered, while cosmetic, food ingredient, and biomaterial manufacturers source virgin or imported raw material inputs.]]></description>
+        <inefficiency_type role="filter">Wasted end-of-life value</inefficiency_type>
+        <inefficiency_type role="filter">Unexploited customer engagement</inefficiency_type>
+      </linear_model_replaced>
+
+      <business_model>
+        <revenue_model role="prose"><![CDATA[B2B sales of sorted, pure organic waste streams to upcycling manufacturers and innovators; potential service fee or subscription from waste-generating businesses for separated collection]]></revenue_model>
+        <pricing_mechanism role="prose">Wholesale material sales priced against the avoided disposal cost for businesses and the virgin material cost for buyers; collection service fee to generating businesses</pricing_mechanism>
+        <technology_enabler role="prose">Low-emission urban logistics (cycle couriers, electric vehicles); source-separation collection protocol; material matching platform connecting waste generators with upcycling buyers</technology_enabler>
+      </business_model>
+
+      <users_and_partners>
+        <target_users role="prose"><![CDATA[Primary: Amsterdam food businesses (cafes, restaurants, juice bars, food processors) generating consistent organic by-product streams. Secondary: Cosmetic manufacturers, food ingredient companies, and biomaterial innovators seeking traceable, high-purity urban organic inputs.]]></target_users>
+        <value_propositions role="prose"><![CDATA[Waste generators: a convenient, low-emission collection service that diverts organic by-products from waste streams and may provide a material income or reduced disposal cost. Material buyers: a consistent, traceable, purity-assured supply of urban organic by-products replacing virgin inputs.]]></value_propositions>
+        <partnerships role="prose"><![CDATA[Amsterdam businesses generating food by-products (supply side); cosmetics, food ingredient, and biomaterials manufacturers (demand side); cycle courier and EV logistics partners; Amsterdam city and innovation ecosystem]]></partnerships>
+      </users_and_partners>
+
+      <impact>
+        <quantified_impact role="prose"><![CDATA[Only 2% of urban organic waste is currently reused in the Netherlands; De Clique directly targets the 98% untapped gap by creating a logistics and market infrastructure that did not previously exist; exact volume and revenue figures not stated in source.]]></quantified_impact>
+        <replication_model role="prose">City-replication model for dense urban food business environments; model most scalable in cities with high cafe / restaurant density, favorable cycling logistics infrastructure, and active circular economy municipal policy.</replication_model>
+      </impact>
+
+      <context>
+        <regulatory_policy_enabler role="prose"><![CDATA[Dutch and EU waste hierarchy legislation prioritising material recovery over energy recovery; Amsterdam Green City ambitions; EU circular economy action plan targets for biological material reuse; Extended Producer Responsibility frameworks creating incentives for waste stream separation at source.]]></regulatory_policy_enabler>
+        <economic_regulatory_pressure>
+          <pressure type="Regulatory / compliance pressure" role="filter">waste hierarchy, EPR</pressure>
+          <pressure type="Consumer demand shift" role="filter">urban sustainability</pressure>
+          <pressure type="Internal mandate or leadership commitment" role="filter"/>
+        </economic_regulatory_pressure>
+        <success_criteria>
+          <criterion type="New revenue or market access" role="filter"/>
+          <criterion type="Emissions or resource reduction target" role="filter"/>
+          <criterion type="Cost reduction" role="filter">for waste generators</criterion>
+          <criterion type="Supply chain resilience" role="filter">for material buyers</criterion>
+        </success_criteria>
+        <barriers_challenges role="prose"><![CDATA[Ensuring stream purity through behavioral compliance by waste-generating businesses; achieving sufficient urban collection density for logistics unit economics; developing and maintaining a reliable buyer market for each stream type; scaling beyond Amsterdam without city-specific density advantages.]]></barriers_challenges>
+        <circular_maturity_prior role="prose"><![CDATA[Low (urban organic waste is predominantly mixed and sent to anaerobic digestion; source-separated collection for high-value upcycling is rare outside specialist pilots)]]></circular_maturity_prior>
+        <capability_requirements role="prose"><![CDATA[Urban logistics capability (low-emission collection at scale); source-separation training and behavioral compliance infrastructure for waste-generating businesses; material characterization and quality assurance for each stream type; buyer network development across cosmetics, ingredients, and biomaterials sectors.]]></capability_requirements>
+      </context>
+
+      <prototype_readiness>
+        <readiness_class role="filter">Prototype-ready (complete sentence)</readiness_class>
+        <statement role="prose"><![CDATA[A startup or municipal waste operator in a dense urban area recruits cafes, juice bars, and food businesses to separate coffee grounds, citrus peels, or other consistent organic by-product streams at source; low-emission couriers collect each stream as a pure, labeled batch; the operator sells curated streams to cosmetics formulators, food ingredient developers, or biomaterial researchers who cannot reliably source these inputs otherwise; each waste-generating business receives a disposal cost credit and a verifiable sustainability metric, while the operator earns a margin between the collection fee and the material sale price.]]></statement>
+      </prototype_readiness>
+      <matching_note role="prose"><![CDATA[Best analogue for urban circular economy startups targeting dense business districts; relevant for any model built on pure stream separation logistics as the core value creation mechanism.]]></matching_note>
+    </entry>
+
+  </entries>
+
+</rag_knowledge_base>
