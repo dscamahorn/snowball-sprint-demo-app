@@ -48,4 +48,4 @@ Each milestone ends with something that runs and can be seen working.
 ## Open decisions
 
 - Whether to keep the no-JavaScript fallback route `/generate`, which renders the concepts page without progress feedback. It costs little and is kept for now.
-- Whether the GitHub repository should be private, per the global standard. This is the owner's call; see the README for the command.
+- Repository visibility: decided September 2026. This repo stays public, as an intentional exception to the private-by-default standard.
