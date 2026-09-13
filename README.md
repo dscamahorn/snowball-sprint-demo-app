@@ -24,6 +24,7 @@ See [docs/architecture.md](docs/architecture.md) for the sequence diagram and mo
 | `TAVILY_API_KEY` | yes | web search for the research agent |
 | `SECRET_KEY` | yes | signing the Flask session cookie; any long random string |
 | `FLASK_DEBUG` | no | `true` turns on hot reload for local development |
+| `FLASK_RUN_PORT` | no | dev server port, `5050` because macOS reserves 5000 for AirPlay Receiver |
 | `POSTHOG_ENABLED` | no | `true` turns on PostHog analytics and AI observability |
 | `POSTHOG_API_KEY` | no | PostHog project key, only read when analytics are enabled |
 | `POSTHOG_HOST` | no | PostHog host, defaults to `https://us.i.posthog.com` |
@@ -36,7 +37,9 @@ See [docs/architecture.md](docs/architecture.md) for the sequence diagram and mo
 uv run flask run
 ```
 
-Then open http://127.0.0.1:5000. Check that the API keys are seen with http://127.0.0.1:5000/health.
+Then open http://127.0.0.1:5050. Check that the API keys are seen with http://127.0.0.1:5050/health.
+
+The server uses port 5050 instead of Flask's default 5000 because macOS reserves 5000 for AirPlay Receiver, which answers with a blank page.
 
 Test connectivity to the three external services:
 

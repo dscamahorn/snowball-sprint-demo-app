@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 uv run flask run
 ```
-`FLASK_DEBUG=true` in `.env` turns on hot reload.
+`FLASK_DEBUG=true` in `.env` turns on hot reload. `FLASK_RUN_PORT=5050` in `.env` picks the port; 5000 is avoided because macOS reserves it for AirPlay Receiver. Open http://127.0.0.1:5050.
 
 **Install or sync dependencies:**
 ```bash
@@ -115,5 +115,6 @@ GEMINI_API_KEY=...       # prototype image generation
 TAVILY_API_KEY=...       # web search for the research agent
 SECRET_KEY=...           # Flask session signing key
 FLASK_DEBUG=true
+FLASK_RUN_PORT=5050
 ```
 Optional PostHog analytics: `POSTHOG_ENABLED=true`, `POSTHOG_API_KEY`, `POSTHOG_HOST`.

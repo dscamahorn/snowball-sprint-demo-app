@@ -17,8 +17,9 @@
   // Runs once after the container is first built so the environment is ready.
   "postCreateCommand": "uv sync && npm install",
 
-  // The Flask dev server port, forwarded to the Mac's browser.
-  "forwardPorts": [5000],
+  // The Flask dev server port, forwarded to the Mac's browser. Port 5000 is
+  // avoided because macOS reserves it for AirPlay Receiver.
+  "forwardPorts": [5050],
 
   // Share the host's ~/.claude folder so Claude Code can read the global
   // CLAUDE.md rules inside the container. The Python image's user is "vscode".
