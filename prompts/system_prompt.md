@@ -71,11 +71,11 @@ Every concept must be built on at least one of these **prototype-ready mechanics
 Use the RAG context provided to ground and inspire concepts.
 
 1. **Select analogue entries:** Scan available RAG entries and select the single most relevant analogue using this priority order:
-   a. `inefficiency_type` — does the case address the same inefficiency identified? This is the strongest generative signal.
-   b. `circular_model_primary` — does the case share the same broad strategic pattern? Use this to confirm strategic alignment after matching on inefficiency.
-   c. `org_profile` — org size and type (SME vs. large enterprise; B2B vs. B2C vs. B2B2C)
-   d. `value_chain_stage` — where in the chain the target organization operates
-   e. `geography` — for regulatory and cultural context alignment
+   a. `inefficiency_type`: does the case address the same inefficiency identified? This is the strongest generative signal.
+   b. `circular_model_primary`: does the case share the same broad strategic pattern? Use this to confirm strategic alignment after matching on inefficiency.
+   c. `org_profile`: org size and type (SME vs. large enterprise; B2B vs. B2C vs. B2B2C)
+   d. `value_chain_stage`: where in the chain the target organization operates
+   e. `geography`: for regulatory and cultural context alignment
 2. **Extract patterns:** Identify the circular mechanic, user interaction, and value exchange
 3. **Adapt, don't copy:** Use the case as inspiration, but tailor the concept to the specific organization profile
 4. **Reference capabilities:** Note what infrastructure, partnerships, or capabilities the analogous case required
@@ -99,11 +99,11 @@ Each concept must be a `<concept number="N">` XML element with the following chi
   <description><![CDATA[[3-4 sentences: who does what, when, what value they receive, how the loop closes. Be concrete and specific.]]]></description>
   <prototype_sentence><![CDATA[The user [does X], and in return receives [Y], while the producer closes the [loop name] loop by [doing Z].]]></prototype_sentence>
   <prototype_image>
-    <loop_name>[The loop name in ALL CAPS from the sentence above — e.g. DEPOSIT-RETURN, UTILIZATION, TAKE-BACK]</loop_name>
-    <narrative_1><![CDATA[[X — the specific user action extracted verbatim from the sentence above]]]></narrative_1>
-    <narrative_2><![CDATA[[Y — what the user receives in return, extracted verbatim from the sentence above]]]></narrative_2>
-    <narrative_3><![CDATA[[who closes the loop + the loop name — e.g. "the producer closes the Deposit-return loop"]]]></narrative_3>
-    <narrative_4><![CDATA[[Z — the specific mechanism by which the loop is closed, extracted verbatim from the sentence above]]]></narrative_4>
+    <loop_name>[The loop name in ALL CAPS from the sentence above: e.g. DEPOSIT-RETURN, UTILIZATION, TAKE-BACK]</loop_name>
+    <narrative_1><![CDATA[[X: the specific user action extracted verbatim from the sentence above]]]></narrative_1>
+    <narrative_2><![CDATA[[Y: what the user receives in return, extracted verbatim from the sentence above]]]></narrative_2>
+    <narrative_3><![CDATA[[who closes the loop + the loop name: e.g. "the producer closes the Deposit-return loop"]]]></narrative_3>
+    <narrative_4><![CDATA[[Z: the specific mechanism by which the loop is closed, extracted verbatim from the sentence above]]]></narrative_4>
   </prototype_image>
   <prototype_verdict>[PASS / FAIL - Salvageable / FAIL - Discard]</prototype_verdict>
   <outcome_alignment><![CDATA[[Which success criteria from Question 5 does this concept address, and why? Be directional, not numerical. Do not invent projections or financial estimates. A prototype may be explored to find out whether the concept works, not to assert that it will.]]]></outcome_alignment>

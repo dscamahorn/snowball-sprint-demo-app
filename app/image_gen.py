@@ -1,4 +1,5 @@
-import base64
+"""Builds the image prompt and asks Gemini to draw a prototype picture for a concept."""
+
 import time
 
 from google import genai
@@ -7,71 +8,93 @@ from google.genai import types
 import config
 from app import analytics
 
-# Read once at module load — 521 KB JPEG, no need to hit disk on every request.
-_REF_IMAGE_BYTES = config.IMAGE_REFERENCE_FILE.read_bytes()
+# Tells Gemini to decide for itself how much "thinking" to do before drawing.
+# The Gemini SDK uses -1 to mean "choose the budget dynamically".
+GEMINI_DYNAMIC_THINKING_BUDGET = -1
 
-_MODEL = "gemini-3.1-flash-image-preview"
+# Each placeholder that appears in image_prompt.md, mapped to the key of the
+# concept field whose text replaces it.
+PROMPT_PLACEHOLDERS = {
+    "[LOOP_NAME_CAPS]": "loop_name_caps",
+    "[NARRATIVE_1_TEXT]": "narrative_1",
+    "[NARRATIVE_2_TEXT]": "narrative_2",
+    "[NARRATIVE_3_TEXT]": "narrative_3",
+    "[NARRATIVE_4_TEXT]": "narrative_4",
+}
+
+# The prompt file ends with notes for developers. Everything from this heading
+# onward is cut off before the prompt is sent to the model.
+DEVELOPER_NOTES_HEADING = "### Integration Mapping"
 
 
-def call_gemini_image(prompt: str, distinct_id: str | None = None, trace_id: str | None = None) -> bytes:
+def build_image_prompt(image_fields: dict):
+    """Fill the image prompt template with this concept's text.
+
+    Returns the finished prompt string, or None if any required field is empty.
     """
-    Calls the Gemini image generation model and returns raw PNG bytes.
-    Passes the style reference image alongside the text prompt.
-    Raises on API error or if no image part is found in the response.
+    for field_key in PROMPT_PLACEHOLDERS.values():
+        if not image_fields.get(field_key):
+            return None
+
+    prompt_file_text = config.load_text_file(config.IMAGE_PROMPT_FILE)
+    prompt_template = prompt_file_text.split(DEVELOPER_NOTES_HEADING)[0].rstrip()
+
+    prompt = prompt_template
+    for placeholder, field_key in PROMPT_PLACEHOLDERS.items():
+        prompt = prompt.replace(placeholder, image_fields[field_key])
+    return prompt
+
+
+def call_gemini_image(prompt: str, distinct_id: str, trace_id: str) -> bytes:
+    """Send the prompt plus the style reference image to Gemini and return PNG bytes.
+
+    Raises ValueError if Gemini answers without an image, for example when it
+    refuses the prompt.
     """
+    reference_image_bytes = config.IMAGE_REFERENCE_FILE.read_bytes()
     client = genai.Client(api_key=config.GEMINI_API_KEY)
-    start = time.perf_counter()
+
+    start_time = time.perf_counter()
     response = client.models.generate_content(
-        model=_MODEL,
+        model=config.GEMINI_IMAGE_MODEL,
         contents=[
-            types.Part.from_bytes(data=_REF_IMAGE_BYTES, mime_type="image/jpeg"),
+            types.Part.from_bytes(data=reference_image_bytes, mime_type="image/jpeg"),
             prompt,
         ],
         config=types.GenerateContentConfig(
             response_modalities=["IMAGE"],
-            thinking_config=types.ThinkingConfig(thinking_budget=-1),
+            thinking_config=types.ThinkingConfig(thinking_budget=GEMINI_DYNAMIC_THINKING_BUDGET),
         ),
     )
-    latency = time.perf_counter() - start
-    usage = getattr(response, "usage_metadata", None)
+    latency_seconds = time.perf_counter() - start_time
+
+    # Token counts are optional in Gemini's reply, so check before reading them.
+    input_tokens = None
+    output_tokens = None
+    usage_metadata = response.usage_metadata
+    if usage_metadata is not None:
+        input_tokens = usage_metadata.prompt_token_count
+        output_tokens = usage_metadata.candidates_token_count
+
     analytics.capture_ai_generation(
-        distinct_id,
+        distinct_id=distinct_id,
         trace_id=trace_id,
-        model=_MODEL,
+        model=config.GEMINI_IMAGE_MODEL,
         provider="gemini",
-        input=[{"role": "user", "content": prompt}],
-        output=[{"role": "assistant", "content": "<image>"}],
-        input_tokens=getattr(usage, "prompt_token_count", None),
-        output_tokens=getattr(usage, "candidates_token_count", None),
-        latency=latency,
+        input_messages=[{"role": "user", "content": prompt}],
+        output_messages=[{"role": "assistant", "content": "<image>"}],
+        input_tokens=input_tokens,
+        output_tokens=output_tokens,
+        latency_seconds=latency_seconds,
     )
-    for part in response.candidates[0].content.parts:
+
+    # The reply is a list of parts. The image, if any, is the part with inline data.
+    response_parts = response.candidates[0].content.parts
+    for part in response_parts:
         if part.inline_data is not None:
             return part.inline_data.data
+
     raise ValueError(
-        "Gemini returned no image — the model may have refused the prompt or "
-        "returned a text-only response. Check the prompt for policy violations."
-    )
-
-
-def build_image_prompt(image_fields: dict) -> str | None:
-    """
-    Loads image_prompt.md, strips the developer-only Integration Mapping section,
-    substitutes the pre-parsed image fields, and returns the final prompt string.
-    Returns None if any required field is missing.
-    """
-    required = ("loop_name_caps", "narrative_1", "narrative_2", "narrative_3", "narrative_4")
-    if not all(image_fields.get(k) for k in required):
-        return None
-
-    raw      = config.load_file(config.IMAGE_PROMPT_FILE)
-    template = raw.split("### Integration Mapping")[0].rstrip()
-
-    return (
-        template
-        .replace("[LOOP_NAME_CAPS]",   image_fields["loop_name_caps"])
-        .replace("[NARRATIVE_1_TEXT]", image_fields["narrative_1"])
-        .replace("[NARRATIVE_2_TEXT]", image_fields["narrative_2"])
-        .replace("[NARRATIVE_3_TEXT]", image_fields["narrative_3"])
-        .replace("[NARRATIVE_4_TEXT]", image_fields["narrative_4"])
+        "Gemini returned no image. The model may have refused the prompt or "
+        "replied with text only. Check the prompt for policy problems."
     )
