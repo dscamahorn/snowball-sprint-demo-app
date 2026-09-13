@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository. The global rules in `~/.claude/CLAUDE.md` apply in full; this file only adds what is specific to this project.
 
 ## Commands
 
@@ -8,9 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 uv run flask run
 ```
-`FLASK_DEBUG=true` is set in `.env` — hot reload is active.
+`FLASK_DEBUG=true` in `.env` turns on hot reload.
 
-**Install / sync dependencies:**
+**Install or sync dependencies:**
 ```bash
 uv sync
 ```
@@ -20,76 +20,100 @@ uv sync
 uv run python test_apis.py
 ```
 
-**One-off dependency add:**
+**Add a Python dependency:**
 ```bash
 uv add <package>
 ```
 
-There are no lint or test commands configured beyond `test_apis.py`.
+**Lint and format the browser JavaScript** (needs `npm install` first, which the dev container does automatically):
+```bash
+npm run lint
+npm run format
+```
+
+There is no Python test suite yet. `test_apis.py` only checks that the three external APIs answer.
 
 ## Architecture
 
-Flask app structured as a package (`app/`) with Jinja2 templates. No blueprints, no database. State lives only in the Flask session (cookie-backed, keyed by `SECRET_KEY`).
+Flask app structured as a package (`app/`) with Jinja2 templates and small Alpine.js components. No database. Per-visitor state lives in the Flask session cookie (signed with `SECRET_KEY`); results too large for the cookie wait briefly in an in-memory cache.
 
-**Package layout:**
-- `app/__init__.py` — Flask factory (`create_app()`), exports `app` instance for `flask run`
-- `app/routes.py` — all route handlers; imports path constants from `config.py`
-- `app/parser.py` — `_parse_llm_output()`, isolated from Flask
-- `config.py` — env var loading and `Path` constants for all file locations
-- `app/templates/` — Jinja2 templates
-- `app/static/` — static assets (CSS, JS)
+**Top level:**
+- `config.py`: loads `.env`, and holds every model name, tunable limit, and file path. Change settings here, not in the modules.
+- `app/__init__.py`: Flask factory `create_app()`, exports the `app` object that `flask run` imports.
+- `test_apis.py`: connectivity check for Anthropic, Gemini, and Tavily.
+
+**Routes (`app/routes*.py`):** `routes.py` only calls the three register functions.
+- `routes_pages.py`: home, survey, review, start over, `/ping`, `/health`.
+- `routes_research.py`: `/research-stream`, the research agent's server-sent events stream.
+- `routes_concepts.py`: `/generate` (no-JavaScript fallback), `/generate-stream`, `/concepts`, `/visualize`.
+
+**Supporting modules (`app/`):**
+- `llm.py`: concept generation calls to Claude, blocking and streaming.
+- `research_agent.py`: plan, search, reflect, interpret loop using Claude and Tavily.
+- `image_gen.py`: builds the image prompt and calls Gemini for the prototype picture.
+- `parser.py`: turns the `<response>` XML from Claude into a dictionary of concepts.
+- `rag.py`: loads the three knowledge files into one labeled string.
+- `analytics.py`: PostHog capture layer; every function is a no-op when analytics are off.
+- `result_cache.py`: `ResultCache` plus the two shared instances the routes use.
+- `server_sent_events.py`: SSE formatting and the streaming Flask response.
+- `form_helpers.py`: reads survey answers and the concept count out of a form.
+
+**Frontend (`app/templates/`, `app/static/js/`):** each page's Alpine component lives in its own file under `static/js` and is loaded from that page's `{% block scripts %}`. `sse_reader.js` is shared by the home and review pages. Templates pass server data to the components through small inline `<script>` blocks using the `tojson` filter.
 
 **Request flow:**
-1. `/` → `index.html` — landing page with Begin button
-2. `/survey` → `survey.html` — 5-step Alpine.js typeform; answers stored in `session["answers"]`
-3. `/submit` (POST) → `review.html` — user reviews and edits answers inline; sets concept count (1–8)
-4. `/generate` (POST) → calls Anthropic API → parses output → `concepts.html`
-5. `/start-over` → clears session, redirects to `/`
+1. `/` shows two paths: research an organization, or take the survey.
+2. Research path: `POST /research-stream` streams progress, stores the drafted answers in `research_result_cache`, then the browser goes to `/review`, which moves them into the session.
+3. Survey path: `/survey` (5 steps) posts to `/submit`, which saves answers to the session and redirects to `/review`.
+4. `/review`: edit answers, pick a concept count (bounded by `config.MIN_CONCEPT_COUNT` and `MAX_CONCEPT_COUNT`), then `POST /generate-stream` streams per-concept progress and stores the parsed result in `concept_result_cache`.
+5. `/concepts` takes the cached result (read once) and renders the accordion. `POST /visualize` returns a base64 PNG for one concept.
+6. `/start-over` clears the session.
 
-**LLM output parsing (`app/parser.py`):**
-The Anthropic response is structured plain text delimited by `---` separators. The parser:
-- Extracts **profile analysis** via regex for `**Profile analysis:**`, with a fallback to text before the first `---` or `###`
-- Strips any trailing citation bullet lines from the profile block
-- Splits on `\n+---+\n+` to get per-concept sections (each has a `### Concept N: Title` header)
-- Extracts named fields with `**Field name:**` regex per section (case-insensitive)
-- Captures **themes** (closing summary) from the final section after the last concept
+**Why generators appear in this code:** streaming requires the route to hand chunks to the browser as they arrive. `stream_concepts()`, `stream_research_org()`, and the inner `*_events()` functions in the routes use `yield` for that reason and say so in their docstrings. Everywhere else, plain functions that return lists or dictionaries are used.
 
-Returns `(profile, themes, concepts)` — all three are passed to `concepts.html`.
+**Why the app must run with one worker:** the two result caches live in process memory. With more than one gunicorn worker, a result stored by one worker is invisible to the next request. Use `gunicorn --workers 1`.
 
-**System prompt and RAG:**
-- `prompts/system_prompt.md` — the full system prompt loaded from disk on every `/generate` call
-- `knowledge/RAG_consumer_packaging_reuse.xml` — consumer packaging reuse cases, appended to every user message
-- `knowledge/RAG_food_waste_upcycling.xml` — food waste and upcycling cases, appended to every user message
-- `knowledge/rag_registry_circular_economy.md` — controlled vocabulary and schema reference (not sent to LLM; used for authoring consistency)
+## Prompts and knowledge
 
-All files are read at request time (no caching), so edits take effect immediately without restarting Flask.
+- `prompts/system_prompt.md`: concept generator system prompt. Tells Claude to answer in `<response>` XML.
+- `prompts/query_planner_prompt.md`, `reflector_prompt.md`, `interpreter_prompt.md`: the three research agent prompts.
+- `prompts/image_prompt.md`: Gemini image prompt with `[PLACEHOLDER]` tokens; everything from `### Integration Mapping` onward is developer notes and is stripped before sending.
+- `knowledge/RAG_*.xml`: three case study knowledge bases appended to every concept request.
+- `knowledge/rag_registry_circular_economy.md`: controlled vocabulary for authoring the XML files (not sent to the model).
+- `knowledge/image_reference.jpg`: style reference sent to Gemini with every image request.
 
-## Frontend Stack
+All prompt and knowledge files are read from disk at request time, so edits take effect without restarting Flask. Two prompt lines intentionally contain an em-dash character because they tell the model not to use one.
 
-All frontend dependencies are loaded via CDN — no build step:
-- **Tailwind CSS** Play CDN with custom Terra color tokens configured inline in `base.html`
-- **DaisyUI v4** (`daisyui@4/dist/full.min.css`) — must load *before* Tailwind
-- **Alpine.js 3.x** — drives survey step logic, inline editing on review page, favorites/accordion on concepts page
-- **HTMX 2.0.4** — available but minimally used
+## Frontend stack
 
-## Design System (Terra)
+Loaded from CDNs in `base.html`, no build step:
+- Tailwind CSS Play CDN with the Terra color tokens configured inline.
+- DaisyUI v4 (`daisyui@4/dist/full.min.css`), loaded before Tailwind.
+- Alpine.js 3.x, loaded with `defer` so the component functions in `static/js` exist first.
 
-Defined in `instructions/DESIGN.md`. Key tokens used throughout templates:
-- `terra-green` (#4a7c59) — actions, headings, interactive states
-- `terra-cream` (#faf6f0) — page background
-- `terra-amber` (#705c30) — accent labels, badges
-- `terra-muted` (#8a8278) — secondary text
-- `terra-border` (#ddd8d0) — card and input borders
-- `shadow-terra` — `0 4px 20px rgba(46,50,48,0.06)`
-- Typography: Literata (serif, headlines) + Nunito Sans (body)
-- All buttons/cards use `rounded-[12px]`; inputs use cream background with green focus ring
+Prettier and ESLint (flat config in `eslint.config.js`) cover `app/static/js` only. Vite is deliberately not used because there is nothing to bundle.
 
-## Environment Variables
+## Design system (Terra)
+
+Defined in `docs/DESIGN.md`. Tokens used throughout the templates:
+- `terra-green` (#4a7c59): actions, headings, interactive states
+- `terra-cream` (#faf6f0): page background; `terra-cream-dark` (#f0ebe2) for hover fills
+- `terra-amber` (#705c30): accent labels, badges
+- `terra-muted` (#8a8278): secondary text
+- `terra-border` (#ddd8d0): card and input borders
+- `shadow-terra`: `0 4px 20px rgba(46,50,48,0.06)`
+- Typography: Literata (serif headlines) and Nunito Sans (body)
+- Buttons and cards use `rounded-[12px]`; inputs use a cream background with a green focus ring
+
+Every interactive element carries ARIA attributes (labels on inputs, `aria-expanded` on the accordion, `aria-pressed` on toggles, `aria-live` on streaming status). Keep that up when adding UI.
+
+## Environment variables
 
 See `.env.example`. Required in `.env`:
 ```
-ANTHROPIC_API_KEY=...
-GEMINI_API_KEY=...       # not used in main app flow; only in test_apis.py
+ANTHROPIC_API_KEY=...    # all Claude calls
+GEMINI_API_KEY=...       # prototype image generation
+TAVILY_API_KEY=...       # web search for the research agent
 SECRET_KEY=...           # Flask session signing key
 FLASK_DEBUG=true
 ```
+Optional PostHog analytics: `POSTHOG_ENABLED=true`, `POSTHOG_API_KEY`, `POSTHOG_HOST`.

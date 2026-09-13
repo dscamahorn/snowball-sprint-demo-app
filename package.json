@@ -1,0 +1,17 @@
+{
+  "name": "circular-concept",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Prettier and ESLint for the browser JavaScript in app/static/js. The Python side is managed by uv.",
+  "scripts": {
+    "lint": "eslint app/static/js",
+    "format": "prettier --write \"app/static/js/**/*.js\"",
+    "format:check": "prettier --check \"app/static/js/**/*.js\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
+    "prettier": "^3.0.0"
+  }
+}

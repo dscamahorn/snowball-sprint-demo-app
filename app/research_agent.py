@@ -1,6 +1,18 @@
+"""Researches an organization on the web and drafts the five survey answers.
+
+The flow has four phases:
+  1. Plan: Claude writes a set of web search queries for the brand, and a
+     second set for its parent company if it has one.
+  2. Search: each query runs through Tavily, a web search API for AI apps.
+  3. Reflect: Claude looks at the results, and if it sees gaps it asks for
+     one more round of targeted searches.
+  4. Interpret: Claude writes the five survey answers from everything found,
+     with a confidence rating on each.
+"""
+
 import json
 import time
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree
 
 import anthropic
 from tavily import TavilyClient
@@ -8,229 +20,284 @@ from tavily import TavilyClient
 import config
 from app import analytics
 
-_anthropic = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
-_tavily    = TavilyClient(api_key=config.TAVILY_API_KEY)
+# How many search rounds may run in total. Round 1 always runs; the reflector
+# may add follow-up rounds until this cap is reached.
+MAX_SEARCH_ROUNDS = 2
 
-MAX_ROUNDS = 2
-_MODEL     = "claude-sonnet-4-6"
+# Caps on how many queries the planner and reflector may hand back.
+MAX_BRAND_QUERIES = 5
+MAX_PARENT_QUERIES = 4
+MAX_FOLLOW_UP_QUERIES = 3
+
+# The reflector only sees the first results so its call stays quick and cheap.
+# The interpreter always sees everything.
+MAX_RESULTS_SHOWN_TO_REFLECTOR = 20
+
+# How many web pages Tavily returns for each query.
+TAVILY_RESULTS_PER_QUERY = 5
+
+# Reply length limits for each Claude call. The planner and reflector return
+# short JSON; the interpreter writes five paragraphs.
+QUERY_PLANNER_MAX_TOKENS = 768
+REFLECTOR_MAX_TOKENS = 256
+INTERPRETER_MAX_TOKENS = 2048
+
+SURVEY_ANSWER_KEYS = ["q1", "q2", "q3", "q4", "q5"]
+
+# Confidence used when the interpreter leaves the rating off, and when it
+# skips a question entirely.
+DEFAULT_CONFIDENCE = "medium"
+MISSING_ANSWER_CONFIDENCE = "low"
+
+CODE_FENCE = "```"
 
 
-def _capture(distinct_id, trace_id, user_content, response, latency):
-    """Emit a $ai_generation for one research-agent Anthropic call."""
-    analytics.capture_ai_generation(
-        distinct_id,
-        trace_id=trace_id,
-        model=_MODEL,
-        provider="anthropic",
-        input=[{"role": "user", "content": user_content}],
-        output=[{"role": "assistant", "content": response.content[0].text}],
-        input_tokens=response.usage.input_tokens,
-        output_tokens=response.usage.output_tokens,
-        latency=latency,
-    )
+def stream_research_org(org_name: str, industry: str, distinct_id: str, trace_id: str):
+    """Run the whole research flow, reporting progress as it goes.
 
-
-def stream_research_org(org_name: str, industry: str, distinct_id: str | None = None, trace_id: str | None = None):
+    This is a generator function: each "yield" sends one progress event to the
+    route, which forwards it to the browser. That is why it cannot be a plain
+    function that returns at the end. Events are dictionaries:
+      {"type": "status", "message": "..."}  a phase change
+      {"type": "search", "query": "..."}    one web search being run
+      {"type": "result", "data": {...}}     the finished answers (always last)
+    Any unrecoverable problem is raised as an exception for the route to handle.
     """
-    Agentic research loop with parent company expansion. Yields event dicts:
-      {"type": "status", "message": "..."}   — phase transitions
-      {"type": "search", "query": "..."}     — each Tavily search issued
-      {"type": "result", "data": {...}}       — final parsed answers (last event)
-    Raises on unrecoverable error.
-    """
-    # Phase 1: plan queries for brand and parent (if known)
-    yield {"type": "status", "message": "Planning search queries…"}
-    plan = _plan_queries(org_name, industry, distinct_id, trace_id)
-    brand_queries  = plan["brand_queries"]
-    parent_name    = plan["parent"]
+    yield {"type": "status", "message": "Planning search queries..."}
+    plan = plan_queries(org_name, industry, distinct_id, trace_id)
+    brand_queries = plan["brand_queries"]
+    parent_name = plan["parent"]
     parent_queries = plan["parent_queries"]
 
-    seen_urls   = set()
+    # Results from every round are pooled here. seen_urls stops the same page
+    # from being counted twice when two queries return it.
+    seen_urls = set()
     all_results = []
 
-    # Round 1: brand queries
+    # Round 1, part one: the brand itself.
     for query in brand_queries:
         yield {"type": "search", "query": query}
-        for result in _tavily_search(query):
-            url = result.get("url", "")
-            if url not in seen_urls:
-                seen_urls.add(url)
-                all_results.append(result)
+        search_results = search_web(query)
+        add_new_results(search_results, seen_urls, all_results)
 
-    # Round 1: parent queries (if a parent was identified)
+    # Round 1, part two: the parent company, when the planner found one.
     if parent_name and parent_queries:
-        yield {"type": "status", "message": f"Searching {parent_name} (parent company)…"}
+        yield {"type": "status", "message": "Searching " + parent_name + " (parent company)..."}
         for query in parent_queries:
             yield {"type": "search", "query": query}
-            for result in _tavily_search(query):
-                url = result.get("url", "")
-                if url not in seen_urls:
-                    seen_urls.add(url)
-                    all_results.append(result)
+            search_results = search_web(query)
+            add_new_results(search_results, seen_urls, all_results)
 
-    # Reflect: let the LLM decide whether to search again (at most MAX_ROUNDS total)
+    # Follow-up rounds: let Claude decide whether the results have gaps.
     current_round = 1
-    while current_round < MAX_ROUNDS:
-        yield {"type": "status", "message": "Reviewing findings for gaps…"}
-        decision = _reflect_on_results(org_name, all_results, distinct_id, trace_id)
-
+    while current_round < MAX_SEARCH_ROUNDS:
+        yield {"type": "status", "message": "Reviewing findings for gaps..."}
+        decision = reflect_on_results(org_name, all_results, distinct_id, trace_id)
         if decision["action"] == "done":
             break
 
-        # search_again: run targeted follow-up queries
-        yield {"type": "status", "message": "Searching for additional details…"}
+        yield {"type": "status", "message": "Searching for additional details..."}
         for query in decision["queries"]:
             yield {"type": "search", "query": query}
-            for result in _tavily_search(query):
-                url = result.get("url", "")
-                if url not in seen_urls:
-                    seen_urls.add(url)
-                    all_results.append(result)
-
+            search_results = search_web(query)
+            add_new_results(search_results, seen_urls, all_results)
         current_round += 1
 
-    # Synthesize all collected results
-    yield {"type": "status", "message": "Synthesizing findings…"}
-    data = _interpret_results(org_name, parent_name, all_results, distinct_id, trace_id)
-    yield {"type": "result", "data": data}
+    yield {"type": "status", "message": "Synthesizing findings..."}
+    research_data = interpret_results(org_name, parent_name, all_results, distinct_id, trace_id)
+    yield {"type": "result", "data": research_data}
 
 
-def _plan_queries(org_name: str, industry: str, distinct_id=None, trace_id=None) -> dict:
-    """
-    Returns {"brand_queries": [...], "parent": str|None, "parent_queries": [...]}.
-    """
-    system = config.load_file(config.QUERY_PLANNER_PROMPT_FILE)
-    user_content = f"Organization: {org_name}"
-    if industry:
-        user_content += f"\nIndustry/Sector: {industry}"
+def add_new_results(search_results: list, seen_urls: set, all_results: list):
+    """Append results whose URL has not been seen before, and remember their URLs."""
+    for search_result in search_results:
+        result_url = search_result.get("url", "")
+        if result_url not in seen_urls:
+            seen_urls.add(result_url)
+            all_results.append(search_result)
 
-    start = time.perf_counter()
-    response = _anthropic.messages.create(
-        model=_MODEL,
-        max_tokens=768,
-        system=system,
+
+def ask_claude(system_prompt: str, user_content: str, max_tokens: int, distinct_id: str, trace_id: str) -> str:
+    """Make one Claude call, record it for analytics, and return the reply text."""
+    client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
+
+    start_time = time.perf_counter()
+    response = client.messages.create(
+        model=config.CLAUDE_MODEL,
+        max_tokens=max_tokens,
+        system=system_prompt,
         messages=[{"role": "user", "content": user_content}],
     )
-    _capture(distinct_id, trace_id, user_content, response, time.perf_counter() - start)
-    text = response.content[0].text.strip()
-    if text.startswith("```"):
-        text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+    latency_seconds = time.perf_counter() - start_time
+
+    response_text = response.content[0].text
+    analytics.capture_ai_generation(
+        distinct_id=distinct_id,
+        trace_id=trace_id,
+        model=config.CLAUDE_MODEL,
+        provider="anthropic",
+        input_messages=[{"role": "user", "content": user_content}],
+        output_messages=[{"role": "assistant", "content": response_text}],
+        input_tokens=response.usage.input_tokens,
+        output_tokens=response.usage.output_tokens,
+        latency_seconds=latency_seconds,
+    )
+    return response_text.strip()
+
+
+def strip_code_fence(text: str) -> str:
+    """Remove a Markdown code fence if the model wrapped its JSON in one."""
+    if not text.startswith(CODE_FENCE):
+        return text
+    # Drop the opening fence line (which may say ```json), then the closing fence.
+    first_line_break = text.find("\n")
+    without_opening = text[first_line_break + 1 :]
+    closing_fence_index = without_opening.rfind(CODE_FENCE)
+    if closing_fence_index == -1:
+        return without_opening.strip()
+    return without_opening[:closing_fence_index].strip()
+
+
+def plan_queries(org_name: str, industry: str, distinct_id: str, trace_id: str) -> dict:
+    """Ask Claude which web searches to run.
+
+    Returns a dictionary with "brand_queries" (list), "parent" (name or None),
+    and "parent_queries" (list, empty when there is no parent).
+    """
+    system_prompt = config.load_text_file(config.QUERY_PLANNER_PROMPT_FILE)
+    user_content = "Organization: " + org_name
+    if industry:
+        user_content += "\nIndustry/Sector: " + industry
+
+    reply_text = ask_claude(system_prompt, user_content, QUERY_PLANNER_MAX_TOKENS, distinct_id, trace_id)
+    reply_text = strip_code_fence(reply_text)
+
     try:
-        plan = json.loads(text)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Query planner returned invalid JSON: {e}") from e
+        plan = json.loads(reply_text)
+    except json.JSONDecodeError as decode_error:
+        # The planner is told to return only JSON; anything else is a real failure.
+        raise ValueError("Query planner returned invalid JSON: " + str(decode_error)) from decode_error
 
     brand_queries = plan.get("brand_queries", [])
-    if not isinstance(brand_queries, list) or not brand_queries:
+    if not isinstance(brand_queries, list) or len(brand_queries) == 0:
         raise ValueError("Query planner returned no brand_queries")
 
-    parent = plan.get("parent") or None
-    if isinstance(parent, str) and parent.lower() in ("null", "none", ""):
-        parent = None
+    # The planner sometimes writes the word "null" instead of a JSON null.
+    parent_name = plan.get("parent")
+    if isinstance(parent_name, str):
+        if parent_name.strip().lower() in ["", "null", "none"]:
+            parent_name = None
+    else:
+        parent_name = None
 
-    parent_queries = plan.get("parent_queries", []) if parent else []
+    parent_queries = []
+    if parent_name:
+        parent_queries = plan.get("parent_queries", [])
 
     return {
-        "brand_queries":  brand_queries[:5],
-        "parent":         parent,
-        "parent_queries": parent_queries[:4],
+        "brand_queries": brand_queries[:MAX_BRAND_QUERIES],
+        "parent": parent_name,
+        "parent_queries": parent_queries[:MAX_PARENT_QUERIES],
     }
 
 
-def _reflect_on_results(org_name: str, results: list[dict], distinct_id=None, trace_id=None) -> dict:
-    """
-    Returns {"action": "done"} or {"action": "search_again", "queries": [...]}.
-    Falls back to {"action": "done"} on any parsing failure — never blocks synthesis.
-    Input is capped at 20 results to keep reflector latency and cost bounded;
-    the interpreter always receives the full result set.
-    """
-    system = config.load_file(config.REFLECTOR_PROMPT_FILE)
-    formatted    = _format_results(results[:20]) if results else "No search results were returned."
-    user_content = f"Organization: {org_name}\n\nCurrent search results:\n{formatted}"
+def reflect_on_results(org_name: str, results: list, distinct_id: str, trace_id: str) -> dict:
+    """Ask Claude whether the results are good enough or need another search round.
 
-    start = time.perf_counter()
-    response = _anthropic.messages.create(
-        model=_MODEL,
-        max_tokens=256,
-        system=system,
-        messages=[{"role": "user", "content": user_content}],
-    )
-    _capture(distinct_id, trace_id, user_content, response, time.perf_counter() - start)
-    text = response.content[0].text.strip()
-    if text.startswith("```"):
-        text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
+    Returns {"action": "done"} or {"action": "search_again", "queries": [...]}.
+    Any problem reading the reply falls back to "done" so research always finishes.
+    """
+    system_prompt = config.load_text_file(config.REFLECTOR_PROMPT_FILE)
+    if len(results) == 0:
+        formatted_results = "No search results were returned."
+    else:
+        formatted_results = format_results(results[:MAX_RESULTS_SHOWN_TO_REFLECTOR])
+    user_content = "Organization: " + org_name + "\n\nCurrent search results:\n" + formatted_results
+
+    reply_text = ask_claude(system_prompt, user_content, REFLECTOR_MAX_TOKENS, distinct_id, trace_id)
+    reply_text = strip_code_fence(reply_text)
+
     try:
-        decision = json.loads(text)
-        if decision.get("action") not in ("done", "search_again"):
+        decision = json.loads(reply_text)
+        if decision.get("action") not in ["done", "search_again"]:
             raise ValueError("Unexpected action value")
         if decision["action"] == "search_again":
-            queries = decision.get("queries", [])
-            if not isinstance(queries, list) or not queries:
+            follow_up_queries = decision.get("queries", [])
+            if not isinstance(follow_up_queries, list) or len(follow_up_queries) == 0:
                 raise ValueError("search_again returned no queries")
-            decision["queries"] = queries[:3]
+            decision["queries"] = follow_up_queries[:MAX_FOLLOW_UP_QUERIES]
         return decision
     except (json.JSONDecodeError, ValueError):
+        # Malformed reflector output should never block the rest of the flow.
         return {"action": "done"}
 
 
-def _tavily_search(query: str) -> list[dict]:
-    response = _tavily.search(
+def search_web(query: str) -> list:
+    """Run one web search through Tavily and return its list of result dictionaries."""
+    tavily_client = TavilyClient(api_key=config.TAVILY_API_KEY)
+    response = tavily_client.search(
         query=query,
         search_depth="advanced",
-        max_results=5,
+        max_results=TAVILY_RESULTS_PER_QUERY,
     )
     return response.get("results", [])
 
 
-def _format_results(results: list[dict]) -> str:
-    parts = []
-    for i, r in enumerate(results, 1):
-        parts.append(
-            f"[{i}] {r.get('title', 'No title')}\n"
-            f"URL: {r.get('url', '')}\n"
-            f"{r.get('content', '').strip()}"
-        )
-    return "\n\n".join(parts)
+def format_results(results: list) -> str:
+    """Lay out search results as numbered blocks of title, URL, and page text."""
+    formatted_blocks = []
+    result_number = 1
+    for search_result in results:
+        title = search_result.get("title", "No title")
+        url = search_result.get("url", "")
+        content = search_result.get("content", "").strip()
+        block = "[" + str(result_number) + "] " + title + "\nURL: " + url + "\n" + content
+        formatted_blocks.append(block)
+        result_number += 1
+    return "\n\n".join(formatted_blocks)
 
 
-def _interpret_results(org_name: str, parent_name: str | None, results: list[dict], distinct_id=None, trace_id=None) -> dict:
-    # Blocks the worker thread for the duration of the Anthropic call (~5–10s).
-    # Safe with --workers 1; revisit if worker count is raised.
-    system       = config.load_file(config.INTERPRETER_PROMPT_FILE)
-    formatted    = _format_results(results) if results else "No search results were returned."
-    user_content = f"Organization: {org_name}"
+def interpret_results(org_name: str, parent_name, results: list, distinct_id: str, trace_id: str) -> dict:
+    """Ask Claude to write the five survey answers from all the search results."""
+    system_prompt = config.load_text_file(config.INTERPRETER_PROMPT_FILE)
+    if len(results) == 0:
+        formatted_results = "No search results were returned."
+    else:
+        formatted_results = format_results(results)
+
+    user_content = "Organization: " + org_name
     if parent_name:
-        user_content += f"\nParent Company: {parent_name}"
-    user_content += f"\n\nSearch Results:\n{formatted}"
+        user_content += "\nParent Company: " + parent_name
+    user_content += "\n\nSearch Results:\n" + formatted_results
 
-    start = time.perf_counter()
-    response = _anthropic.messages.create(
-        model=_MODEL,
-        max_tokens=2048,
-        system=system,
-        messages=[{"role": "user", "content": user_content}],
-    )
-    _capture(distinct_id, trace_id, user_content, response, time.perf_counter() - start)
-    return _parse_research_output(response.content[0].text.strip(), org_name)
+    reply_text = ask_claude(system_prompt, user_content, INTERPRETER_MAX_TOKENS, distinct_id, trace_id)
+    return parse_research_output(reply_text, org_name)
 
 
-def _parse_research_output(text: str, org_name: str) -> dict:
-    start = text.find("<research>")
-    end   = text.find("</research>")
-    if start == -1 or end == -1:
+def parse_research_output(reply_text: str, org_name: str) -> dict:
+    """Read the interpreter's <research> XML into answers and confidence ratings."""
+    open_tag = "<research>"
+    close_tag = "</research>"
+    start_index = reply_text.find(open_tag)
+    end_index = reply_text.find(close_tag)
+    if start_index == -1 or end_index == -1:
         raise ValueError("Interpreter output did not contain a <research> block")
 
-    root = ET.fromstring(text[start : end + len("</research>")])
+    research_xml = reply_text[start_index : end_index + len(close_tag)]
+    root_element = ElementTree.fromstring(research_xml)
 
-    answers     = {}
+    answers = {}
     confidences = {}
-    for key in ("q1", "q2", "q3", "q4", "q5"):
-        el = root.find(key)
-        if el is not None:
-            answers[key]     = (el.text or "").strip()
-            confidences[key] = el.get("confidence", "medium")
+    for answer_key in SURVEY_ANSWER_KEYS:
+        answer_element = root_element.find(answer_key)
+        if answer_element is None:
+            answers[answer_key] = ""
+            confidences[answer_key] = MISSING_ANSWER_CONFIDENCE
         else:
-            answers[key]     = ""
-            confidences[key] = "low"
+            answer_text = answer_element.text
+            if answer_text is None:
+                answer_text = ""
+            answers[answer_key] = answer_text.strip()
+            confidences[answer_key] = answer_element.get("confidence", DEFAULT_CONFIDENCE)
 
     return {"answers": answers, "confidences": confidences, "org_name": org_name}

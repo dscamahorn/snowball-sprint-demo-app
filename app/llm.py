@@ -1,94 +1,139 @@
+"""Talks to Claude to generate circular economy concepts.
+
+Two entry points do the same job in different ways. generate_concepts() waits
+for the whole reply before returning it. stream_concepts() hands back text a
+piece at a time as it arrives, so the browser can show live progress.
+"""
+
 import time
 
-import anthropic as anthropic_sdk
+import anthropic
+
 import config
 from app import analytics
 
-_MODEL = "claude-sonnet-4-6"
+# Upper bound on the length of the model's reply. Eight concepts with every
+# field filled in can run long, so this is generous.
+CONCEPT_GENERATION_MAX_TOKENS = 8192
 
 
-def _build_user_message(answers: dict, n_concepts: int, rag_context: str) -> str:
-    return f"""**Question 1: What does the organization make or do?**
-{answers["q1"]}
+def build_user_message(answers: dict, concept_count: int, rag_context: str) -> str:
+    """Assemble the user message: the five answers, the concept count, and the RAG cases."""
+    answer_1 = answers["q1"]
+    answer_2 = answers["q2"]
+    answer_3 = answers["q3"]
+    answer_4 = answers["q4"]
+    answer_5 = answers["q5"]
+
+    user_message = f"""**Question 1: What does the organization make or do?**
+{answer_1}
 
 **Question 2: Where does waste, inefficiency, or end-of-life live in their value chain?**
-{answers["q2"]}
+{answer_2}
 
 **Question 3: What pressure is driving the need to change?**
-{answers["q3"]}
+{answer_3}
 
 **Question 4: What circular territory have they already explored?**
-{answers["q4"]}
+{answer_4}
 
 **Question 5: What does a successful outcome look like for them?**
-{answers["q5"]}
+{answer_5}
 
 ---
 
-**Number of concepts to generate:** {n_concepts}
+**Number of concepts to generate:** {concept_count}
 
 **RAG context:**
 
 {rag_context}
 """
+    return user_message
 
 
-def call_anthropic(
-    answers: dict, n_concepts: int, system_prompt: str, rag_context: str,
-    distinct_id: str | None = None, trace_id: str | None = None,
+def create_anthropic_client():
+    """Create a client for the Anthropic API using the key from .env."""
+    return anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
+
+
+def generate_concepts(
+    answers: dict,
+    concept_count: int,
+    system_prompt: str,
+    rag_context: str,
+    distinct_id: str,
+    trace_id: str,
 ) -> str:
-    user_message = _build_user_message(answers, n_concepts, rag_context)
-    client = anthropic_sdk.Anthropic(api_key=config.ANTHROPIC_API_KEY)
-    start = time.perf_counter()
+    """Ask Claude for the concepts and return the full reply text once it is finished."""
+    user_message = build_user_message(answers, concept_count, rag_context)
+    client = create_anthropic_client()
+
+    start_time = time.perf_counter()
     response = client.messages.create(
-        model=_MODEL,
-        max_tokens=8192,
+        model=config.CLAUDE_MODEL,
+        max_tokens=CONCEPT_GENERATION_MAX_TOKENS,
         system=system_prompt,
         messages=[{"role": "user", "content": user_message}],
     )
-    latency = time.perf_counter() - start
-    text = response.content[0].text
+    latency_seconds = time.perf_counter() - start_time
+
+    response_text = response.content[0].text
+
     analytics.capture_ai_generation(
-        distinct_id,
+        distinct_id=distinct_id,
         trace_id=trace_id,
-        model=_MODEL,
+        model=config.CLAUDE_MODEL,
         provider="anthropic",
-        input=[{"role": "user", "content": user_message}],
-        output=[{"role": "assistant", "content": text}],
+        input_messages=[{"role": "user", "content": user_message}],
+        output_messages=[{"role": "assistant", "content": response_text}],
         input_tokens=response.usage.input_tokens,
         output_tokens=response.usage.output_tokens,
-        latency=latency,
+        latency_seconds=latency_seconds,
     )
-    return text
+    return response_text
 
 
-def stream_anthropic(
-    answers: dict, n_concepts: int, system_prompt: str, rag_context: str,
-    distinct_id: str | None = None, trace_id: str | None = None,
+def stream_concepts(
+    answers: dict,
+    concept_count: int,
+    system_prompt: str,
+    rag_context: str,
+    distinct_id: str,
+    trace_id: str,
 ):
-    """Generator that yields raw text chunks from the Anthropic streaming API."""
-    user_message = _build_user_message(answers, n_concepts, rag_context)
-    client = anthropic_sdk.Anthropic(api_key=config.ANTHROPIC_API_KEY)
-    start = time.perf_counter()
+    """Ask Claude for the concepts and hand back the reply text piece by piece.
+
+    This is a generator function: each "yield" sends one chunk of text to the
+    caller while the model is still writing. A generator is required here
+    because the route needs to forward chunks to the browser as they arrive,
+    rather than waiting for the whole reply.
+    """
+    user_message = build_user_message(answers, concept_count, rag_context)
+    client = create_anthropic_client()
+
+    start_time = time.perf_counter()
+    # The Anthropic SDK requires the "with" block for streaming so it can close
+    # the connection cleanly when the stream ends.
     with client.messages.stream(
-        model=_MODEL,
-        max_tokens=8192,
+        model=config.CLAUDE_MODEL,
+        max_tokens=CONCEPT_GENERATION_MAX_TOKENS,
         system=system_prompt,
         messages=[{"role": "user", "content": user_message}],
     ) as stream:
-        for text in stream.text_stream:
-            yield text
-        final = stream.get_final_message()
+        for text_chunk in stream.text_stream:
+            yield text_chunk
+        final_message = stream.get_final_message()
+    latency_seconds = time.perf_counter() - start_time
 
     analytics.capture_ai_generation(
-        distinct_id,
+        distinct_id=distinct_id,
         trace_id=trace_id,
-        model=_MODEL,
+        model=config.CLAUDE_MODEL,
         provider="anthropic",
-        input=[{"role": "user", "content": user_message}],
-        output=[{"role": "assistant", "content": final.content[0].text}],
-        input_tokens=final.usage.input_tokens,
-        output_tokens=final.usage.output_tokens,
-        latency=time.perf_counter() - start,
-        **{"$ai_stream": True},
+        input_messages=[{"role": "user", "content": user_message}],
+        output_messages=[{"role": "assistant", "content": final_message.content[0].text}],
+        input_tokens=final_message.usage.input_tokens,
+        output_tokens=final_message.usage.output_tokens,
+        latency_seconds=latency_seconds,
+        is_stream=True,
     )

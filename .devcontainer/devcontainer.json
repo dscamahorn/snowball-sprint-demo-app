@@ -1,0 +1,48 @@
+// Dev container for this project. Open the folder in VS Code and choose
+// "Reopen in Container". Everything (editing, terminal, Flask, Claude Code)
+// then runs inside the container.
+{
+  "name": "Circular Concept (Flask + uv)",
+
+  // Microsoft's Python image: includes git, a shell, and common tools.
+  "image": "mcr.microsoft.com/devcontainers/python:3.14",
+
+  "features": {
+    // uv manages the Python virtual environment and dependencies.
+    "ghcr.io/va-h/devcontainers-features/uv:1": {},
+    // Node is only needed for Prettier and ESLint on the browser JavaScript.
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" }
+  },
+
+  // Runs once after the container is first built so the environment is ready.
+  "postCreateCommand": "uv sync && npm install",
+
+  // The Flask dev server port, forwarded to the Mac's browser.
+  "forwardPorts": [5000],
+
+  // Share the host's ~/.claude folder so Claude Code can read the global
+  // CLAUDE.md rules inside the container. The Python image's user is "vscode".
+  "mounts": [
+    "source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind"
+  ],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "anthropic.claude-code",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python"
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 [project]
 name = "week06"
 version = "0.1.0"
-description = "Add your description here"
+description = "Flask app that generates circular economy business model concepts from a short organization survey, with optional web research and prototype image generation"
 requires-python = ">=3.14"
 dependencies = [
     "anthropic>=0.97.0",
