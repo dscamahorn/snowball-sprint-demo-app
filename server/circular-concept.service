@@ -1,0 +1,27 @@
+# systemd service that keeps gunicorn running on the droplet.
+# setup-site.sh fills in the __APP_DIR__ and __USER__ placeholders and copies
+# the result to /etc/systemd/system/circular-concept.service.
+
+[Unit]
+Description=Circular Concept (Flask app behind gunicorn)
+After=network.target
+
+[Service]
+# The user that owns the app folder. setup-site.sh fills in whoever ran it.
+User=__USER__
+WorkingDirectory=__APP_DIR__
+
+# config.py reads .env from the project root, so no secrets go in this file.
+# PYTHONUNBUFFERED makes print() output show up in the journal right away.
+Environment=PYTHONUNBUFFERED=1
+
+# Start gunicorn from the uv-managed virtual environment. The settings
+# (port, worker count, timeout) live in server/gunicorn.conf.py.
+ExecStart=__APP_DIR__/.venv/bin/gunicorn --config __APP_DIR__/server/gunicorn.conf.py app:app
+
+# Bring the app back up if it crashes.
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

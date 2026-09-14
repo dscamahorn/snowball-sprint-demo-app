@@ -25,6 +25,12 @@ uv run python test_apis.py
 uv add <package>
 ```
 
+**Deploy to the droplet** (needs `deploy.env`, copied from `deploy.env.example`, and the 1Password SSH agent):
+```bash
+./deploy.sh
+```
+Pulls `main` on the droplet, runs `uv sync`, restarts the `circular-concept` systemd service, and checks `/health`. One-time droplet setup is `server/setup-site.sh`; gunicorn, systemd, and Apache config live in `server/`.
+
 **Lint and format the browser JavaScript** (needs `npm install` first, which the dev container does automatically):
 ```bash
 npm run lint
@@ -70,7 +76,7 @@ Flask app structured as a package (`app/`) with Jinja2 templates and small Alpin
 
 **Why generators appear in this code:** streaming requires the route to hand chunks to the browser as they arrive. `stream_concepts()`, `stream_research_org()`, and the inner `*_events()` functions in the routes use `yield` for that reason and say so in their docstrings. Everywhere else, plain functions that return lists or dictionaries are used.
 
-**Why the app must run with one worker:** the two result caches live in process memory. With more than one gunicorn worker, a result stored by one worker is invisible to the next request. Use `gunicorn --workers 1`.
+**Why the app must run with one worker:** the two result caches live in process memory. With more than one gunicorn worker, a result stored by one worker is invisible to the next request. `server/gunicorn.conf.py` sets one worker with several threads, which share memory, so the caches keep working while several visitors are served at once.
 
 ## Prompts and knowledge
 

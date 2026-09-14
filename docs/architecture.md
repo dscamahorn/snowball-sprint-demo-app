@@ -88,6 +88,33 @@ sequenceDiagram
     end
 ```
 
+## Deployment
+
+```mermaid
+flowchart LR
+    classDef local fill:#bbf7d0,stroke:#15803d,color:#1a1a1a
+    classDef edge  fill:#bfdbfe,stroke:#1d4ed8,color:#1a1a1a
+    classDef box   fill:#fef9c3,stroke:#92400e,color:#1a1a1a
+
+    Dev["Mac or dev container\n./deploy.sh\n(SSH key from 1Password agent)"]:::local
+    GitHub["GitHub\nmain branch"]:::edge
+    Browser["Visitor's browser"]:::local
+    Cloudflare["Cloudflare DNS\ncircular.workshopper.ai\n(DNS only)"]:::edge
+
+    subgraph Droplet["DigitalOcean droplet <droplet ip>"]
+        direction TB
+        Apache["Apache :80 and :443\ncertbot certificate\nProxyPass to gunicorn\nProxyTimeout 600"]:::box
+        Gunicorn["gunicorn 127.0.0.1:8000\nsystemd: circular-concept\n1 worker, 8 threads"]:::box
+        App["Flask app\n/var/www/circular.workshopper.ai/app\n.env with API keys"]:::box
+        Apache --> Gunicorn --> App
+    end
+
+    Dev -->|"git push"| GitHub
+    Dev -->|"ssh: git pull, uv sync,\nsystemctl restart"| App
+    GitHub -->|"git pull"| App
+    Browser --> Cloudflare --> Apache
+```
+
 ## Model interactions
 
 ```mermaid
