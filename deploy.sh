@@ -27,7 +27,10 @@ fi
 . ./deploy.env
 
 REMOTE="$DROPLET_USER@$DROPLET_HOST"
-APP_DIR="$SITE_ROOT/app"
+# The repository is cloned directly into the site folder. There is no separate
+# "app" subfolder as on dodge.scamahorn.me, because Apache serves no built
+# files here: everything goes through gunicorn.
+APP_DIR="$SITE_ROOT"
 SERVICE_NAME="circular-concept"
 
 # Reuse one SSH connection for every step. The droplet's firewall refuses

@@ -49,7 +49,7 @@ Each milestone ends with something that runs and can be seen working.
 
 The app runs on one DigitalOcean droplet at https://circular.workshopper.ai. The pieces:
 
-- **Repository** cloned at `/var/www/circular.workshopper.ai/app` on the droplet, the same layout as the other sites there. `.env` with the API keys and `SECRET_KEY` lives there and is never copied by the deploy script. The droplet hosts several other sites, so the setup script only ever touches Apache files named after this domain.
+- **Repository** cloned directly at `/var/www/circular.workshopper.ai` on the droplet. Unlike dodge.scamahorn.me there is no `app` and `public_html` split, because Apache serves no built files for this site. `.env` with the API keys and `SECRET_KEY` lives there and is never copied by the deploy script. The droplet hosts several other sites, so the setup script only ever touches Apache files named after this domain.
 - **gunicorn** serves the Flask app on `127.0.0.1:8000` as the `circular-concept` systemd service. One worker process (the result caches are in memory) with eight threads (so one visitor's long stream does not block the others). Settings in `server/gunicorn.conf.py`.
 - **Apache** answers on ports 80 and 443, serves `app/static` straight from disk, and proxies every other request to gunicorn. The proxy timeout is raised to 600 seconds so the research and generation streams are not cut off. Virtual host template in `server/apache-site.conf`.
 - **certbot** provides the Let's Encrypt certificate and the HTTP to HTTPS redirect.

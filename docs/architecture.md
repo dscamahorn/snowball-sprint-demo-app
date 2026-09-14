@@ -105,7 +105,7 @@ flowchart LR
         direction TB
         Apache["Apache :80 and :443\ncertbot certificate\nProxyPass to gunicorn\nProxyTimeout 600"]:::box
         Gunicorn["gunicorn 127.0.0.1:8000\nsystemd: circular-concept\n1 worker, 8 threads"]:::box
-        App["Flask app\n/var/www/circular.workshopper.ai/app\n.env with API keys"]:::box
+        App["Flask app\n/var/www/circular.workshopper.ai\n.env with API keys"]:::box
         Apache --> Gunicorn --> App
     end
 

@@ -58,7 +58,7 @@ npm run format
 
 The live site is https://circular.workshopper.ai, a DigitalOcean droplet. Apache answers on ports 80 and 443 and forwards every request to gunicorn, which runs the Flask app as a systemd service. Everything for the droplet lives in [server/](server/).
 
-One-time, on the droplet: clone the repo into `/var/www/circular.workshopper.ai/app` (the same layout as dodge.scamahorn.me), copy `.env.example` to `.env` and fill in the keys, then run from that folder:
+One-time, on the droplet: clone the repo into `/var/www/circular.workshopper.ai`, copy `.env.example` to `.env` and fill in the keys, then run from that folder:
 
 ```bash
 sh server/setup-site.sh circular.workshopper.ai you@example.com
@@ -69,9 +69,9 @@ It installs Apache and certbot, installs uv and the Python dependencies, install
 The first time, move the existing clone instead of cloning again so the `.env` with the keys comes along. The virtual environment has to be rebuilt after a move because it contains absolute paths; the setup script does that:
 
 ```bash
-mv /var/www/circular-concept /var/www/circular.workshopper.ai/app
-rm -rf /var/www/circular.workshopper.ai/app/.venv
-cd /var/www/circular.workshopper.ai/app
+mv /var/www/circular-concept /var/www/circular.workshopper.ai
+rm -rf /var/www/circular.workshopper.ai/.venv
+cd /var/www/circular.workshopper.ai
 ```
 
 Every time after that, from the container's terminal or from the Mac itself. VS Code passes the Mac's SSH agent into the container, so the Mac's `~/.zshrc` must point `SSH_AUTH_SOCK` at 1Password's agent socket (1Password's documented one-liner); otherwise the container gets Apple's empty agent and the droplet refuses the connection.

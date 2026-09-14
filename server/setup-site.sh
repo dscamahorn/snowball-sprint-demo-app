@@ -1,6 +1,6 @@
 #!/bin/sh
-# One-time droplet setup. Run it once, as root, from the app folder
-# (/var/www/circular.workshopper.ai/app):
+# One-time droplet setup. Run it once, as root, from the site folder
+# (/var/www/circular.workshopper.ai, where the repository is cloned):
 #
 #   sh server/setup-site.sh circular.workshopper.ai you@example.com
 #
