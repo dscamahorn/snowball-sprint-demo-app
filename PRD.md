@@ -45,6 +45,20 @@ Each milestone ends with something that runs and can be seen working.
 - [ ] **M10. Research progress detail.** Show the actual search queries streaming in on the home page overlay instead of only the cycling messages. Deliverable: the overlay lists each query as it runs.
 - [ ] **M11. Export.** Download the generated concepts as Markdown or PDF for the workshop deck. Deliverable: an Export button on the concepts page.
 
+## Deployment
+
+The app runs on one DigitalOcean droplet at https://circular.workshopper.ai. The pieces:
+
+- **Repository** cloned at `/var/www/circular.workshopper.ai/app` on the droplet, the same layout as the other sites there. `.env` with the API keys and `SECRET_KEY` lives there and is never copied by the deploy script. The droplet hosts several other sites, so the setup script only ever touches Apache files named after this domain.
+- **gunicorn** serves the Flask app on `127.0.0.1:8000` as the `circular-concept` systemd service. One worker process (the result caches are in memory) with eight threads (so one visitor's long stream does not block the others). Settings in `server/gunicorn.conf.py`.
+- **Apache** answers on ports 80 and 443, serves `app/static` straight from disk, and proxies every other request to gunicorn. The proxy timeout is raised to 600 seconds so the research and generation streams are not cut off. Virtual host template in `server/apache-site.conf`.
+- **certbot** provides the Let's Encrypt certificate and the HTTP to HTTPS redirect.
+- **DNS** at Cloudflare, A record pointing at the droplet's IP, set to DNS only.
+
+`server/setup-site.sh` does the one-time install. `deploy.sh` on the Mac or in the dev container does every later update: pull `main`, `uv sync`, restart the service, check `/health`. SSH uses the key held in 1Password's agent.
+
+History: before September 2026 the app ran from `/var/www/circular-concept` as a hand-made `flask_subdomain` service on the same port, with the first commit of the repo. The setup script retires that service and replaces the domain's virtual host files, keeping backups. Worth doing later: a non-root user for the service.
+
 ## Open decisions
 
 - Whether to keep the no-JavaScript fallback route `/generate`, which renders the concepts page without progress feedback. It costs little and is kept for now.
