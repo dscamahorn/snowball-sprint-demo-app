@@ -23,6 +23,6 @@ threads = 8
 STREAM_TIMEOUT_SECONDS = 600
 timeout = STREAM_TIMEOUT_SECONDS
 
-# Send logs to stdout and stderr so "journalctl -u circular-concept" shows them.
+# Send logs to stdout and stderr so "journalctl -u snowball-sprint-demo-app-web" shows them.
 accesslog = "-"
 errorlog = "-"

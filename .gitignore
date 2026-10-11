@@ -1,4 +1,8 @@
+# Secrets and local deploy settings never go in git. .env.example is the template.
 .env
+.env.*
+!.env.example
+cookies*
 .venv/
 __pycache__/
 *.pyc

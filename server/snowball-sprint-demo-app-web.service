@@ -1,13 +1,14 @@
 # systemd service that keeps gunicorn running on the droplet.
 # setup-site.sh fills in the __APP_DIR__ and __USER__ placeholders and copies
-# the result to /etc/systemd/system/circular-concept.service.
+# the result to /etc/systemd/system/snowball-sprint-demo-app-web.service.
 
 [Unit]
-Description=Circular Concept (Flask app behind gunicorn)
+Description=Snowball Sprint demo app (Flask app behind gunicorn)
 After=network.target
 
 [Service]
-# The user that owns the app folder. setup-site.sh fills in whoever ran it.
+# Apache's account: it can read the code but not change it. The "deploy"
+# account owns the folder and runs deploy.sh.
 User=__USER__
 WorkingDirectory=__APP_DIR__
 

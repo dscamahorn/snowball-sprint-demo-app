@@ -1,5 +1,5 @@
 {
-  "name": "circular-concept",
+  "name": "snowball-sprint-demo-app",
   "version": "0.1.0",
   "private": true,
   "description": "Prettier and ESLint for the browser JavaScript in app/static/js. The Python side is managed by uv.",

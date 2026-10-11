@@ -29,7 +29,7 @@ uv add <package>
 ```bash
 ./deploy.sh
 ```
-Pulls `main` on the droplet, runs `uv sync`, restarts the `circular-concept` systemd service, and checks `/health`. One-time droplet setup is `server/setup-site.sh`; gunicorn, systemd, and Apache config live in `server/`.
+Pulls `main` on the droplet, runs `uv sync`, restarts the `snowball-sprint-demo-app-web` systemd service, and checks `/health`. One-time droplet setup is `server/setup-site.sh`; gunicorn, systemd, and Apache config live in `server/`.
 
 **Lint and format the browser JavaScript** (needs `npm install` first, which the dev container does automatically):
 ```bash

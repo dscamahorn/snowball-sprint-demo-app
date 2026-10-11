@@ -13,9 +13,7 @@
 # code is loaded once at startup, so the service is always restarted.
 #
 # Stops at the first failing step and says which one. Safe to run twice.
-# Needs deploy.env (see deploy.env.example) and SSH key access to the droplet.
-# The SSH key lives in 1Password; see the README's Deploying section for how
-# the container reaches it. The .env file with the API keys stays on the
+# Needs deploy.env (see deploy.env.example) and the deploy key in 1Password. The .env file with the API keys stays on the
 # droplet and is never copied.
 
 set -e
@@ -27,16 +25,15 @@ fi
 . ./deploy.env
 
 REMOTE="$DROPLET_USER@$DROPLET_HOST"
-# The repository is cloned directly into the site folder. There is no separate
-# "app" subfolder as on dodge.scamahorn.me, because Apache serves no built
-# files here: everything goes through gunicorn.
-APP_DIR="$SITE_ROOT"
-SERVICE_NAME="circular-concept"
+# The checkout lives in SITE_ROOT/repo, the droplet standard. (Inside it,
+# "app" is this project's Flask package.)
+REPO_DIR="$SITE_ROOT/repo"
+SERVICE_NAME="snowball-sprint-demo-app-web"
 
 # Reuse one SSH connection for every step. The droplet's firewall refuses
 # an address that opens more than about six connections in half a minute.
 # With a shared "control" connection the later steps ride along on the first.
-SSH_OPTIONS="-o ControlMaster=auto -o ControlPath=/tmp/circular-deploy-ssh -o ControlPersist=120"
+SSH_OPTIONS="-o ControlMaster=auto -o ControlPath=/tmp/snowball-sprint-demo-app-web-deploy-ssh -o ControlPersist=120"
 
 step() {
   echo ""
@@ -44,18 +41,22 @@ step() {
 }
 
 step "1/4 Pulling main on the droplet"
-ssh $SSH_OPTIONS "$REMOTE" "cd '$APP_DIR' && git pull --ff-only origin main"
+ssh $SSH_OPTIONS "$REMOTE" "cd '$REPO_DIR' && git pull --ff-only origin main"
 
 step "2/4 Syncing Python dependencies"
 # On the droplet uv is installed as a snap (/snap/bin). The official installer
 # would put it in ~/.local/bin instead. Both are added to PATH so the command
 # works either way over a non-interactive SSH connection.
-ssh $SSH_OPTIONS "$REMOTE" "cd '$APP_DIR' && PATH=\"\$PATH:/snap/bin:\$HOME/.local/bin\" uv sync"
+# UV_PYTHON_INSTALL_DIR puts the interpreter in the shared folder the service
+# (which runs as www-data) can read.
+ssh $SSH_OPTIONS "$REMOTE" "cd '$REPO_DIR' && UV_PYTHON_INSTALL_DIR=/opt/uv/python PATH=\"\$PATH:/snap/bin:\$HOME/.local/bin\" uv sync"
 
 step "3/4 Restarting the $SERVICE_NAME service"
-# The droplet user is root, so no sudo is needed in front of systemctl.
-ssh $SSH_OPTIONS "$REMOTE" "systemctl restart $SERVICE_NAME \
-  && systemctl is-active $SERVICE_NAME > /dev/null \
+# The droplet user is "deploy", which owns the site folder but is not root.
+# A sudo rule on the droplet (/etc/sudoers.d/deploy) lets it run exactly
+# these two systemctl commands for this service, without a password.
+ssh $SSH_OPTIONS "$REMOTE" "sudo systemctl restart $SERVICE_NAME \
+  && sudo systemctl is-active $SERVICE_NAME > /dev/null \
   && echo '$SERVICE_NAME: running'"
 
 step "4/4 Checking the live site"

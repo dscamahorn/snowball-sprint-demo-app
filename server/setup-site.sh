@@ -33,8 +33,9 @@ fi
 
 # The app folder is the parent of the server/ folder this script lives in.
 APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-SERVICE_NAME="circular-concept"
-SERVICE_USER="$(id -un)"
+SERVICE_NAME="snowball-sprint-demo-app-web"
+# The service runs as Apache's account. The "deploy" account owns the folder.
+SERVICE_USER="www-data"
 
 step() {
   echo ""

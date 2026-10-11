@@ -2,29 +2,61 @@
 // "Reopen in Container". Everything (editing, terminal, Flask, Claude Code)
 // then runs inside the container.
 {
-  "name": "Circular Concept (Flask + uv)",
+  "name": "Snowball Sprint demo app (Flask + uv)",
 
-  // Microsoft's Python image: includes git, a shell, and common tools.
+  // Microsoft's Python image: includes git, a shell, sudo, and common tools.
   "image": "mcr.microsoft.com/devcontainers/python:3.14",
 
   "features": {
     // uv manages the Python virtual environment and dependencies.
     "ghcr.io/va-h/devcontainers-features/uv:1": {},
     // Node is only needed for Prettier and ESLint on the browser JavaScript.
-    "ghcr.io/devcontainers/features/node:1": { "version": "lts" }
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" },
+    // Anthropic's feature that installs the Claude Code command-line tool.
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
   },
 
-  // Runs once after the container is first built so the environment is ready.
-  "postCreateCommand": "uv sync && npm install",
+  // Who git says made each commit. Git reads these four environment
+  // variables before any config file, so a freshly built container commits
+  // under the right name on any machine. The email is GitHub's private
+  // no-reply address, so no real address lands in a repo's history.
+  "containerEnv": {
+    "GIT_AUTHOR_NAME": "Doug Scamahorn",
+    "GIT_AUTHOR_EMAIL": "6138631+dscamahorn@users.noreply.github.com",
+    "GIT_COMMITTER_NAME": "Doug Scamahorn",
+    "GIT_COMMITTER_EMAIL": "6138631+dscamahorn@users.noreply.github.com"
+  },
+
+  // Runs on the Mac just before the container is created. A bind mount of a
+  // file that does not exist yet makes Docker create a folder in its place,
+  // so this makes sure the login file exists first ("{}" means not logged in).
+  "initializeCommand": "mkdir -p ~/.claude/skills ~/.claude/web-baseline && ([ -f ~/.claude/.credentials.json ] || echo '{}' > ~/.claude/.credentials.json)",
+
+  // Docker creates the folders a bind mount needs as root, so the first
+  // command hands ~/.claude back to the normal user (Claude Code writes its
+  // session files there). Then the project's dependencies are installed.
+  "postCreateCommand": "sudo chown vscode:vscode /home/vscode/.claude && uv sync && npm install",
 
   // The Flask dev server port, forwarded to the Mac's browser. Port 5000 is
   // avoided because macOS reserves it for AirPlay Receiver.
   "forwardPorts": [5050],
 
-  // Share the host's ~/.claude folder so Claude Code can read the global
-  // CLAUDE.md rules inside the container. The Python image's user is "vscode".
+  // Claude Code reads the global rules from ~/.claude. Only the pieces the
+  // container needs are shared in from the Mac, each as its own mount (the
+  // Python image's user is "vscode"):
+  //   CLAUDE.md          the global rules (read-only)
+  //   settings.json      app preferences
+  //   .credentials.json  the Claude login, so it survives container rebuilds
+  //   skills/            custom skills
+  //   web-baseline/      the robots.txt template (read-only)
+  // The rest of ~/.claude (session transcripts, memory, caches) stays on the
+  // Mac where nothing in the container can read it.
   "mounts": [
-    "source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind"
+    "source=${localEnv:HOME}/.claude/CLAUDE.md,target=/home/vscode/.claude/CLAUDE.md,type=bind,readonly",
+    "source=${localEnv:HOME}/.claude/settings.json,target=/home/vscode/.claude/settings.json,type=bind",
+    "source=${localEnv:HOME}/.claude/.credentials.json,target=/home/vscode/.claude/.credentials.json,type=bind",
+    "source=${localEnv:HOME}/.claude/skills,target=/home/vscode/.claude/skills,type=bind",
+    "source=${localEnv:HOME}/.claude/web-baseline,target=/home/vscode/.claude/web-baseline,type=bind,readonly"
   ],
 
   "customizations": {

@@ -64,7 +64,7 @@ One-time, on the droplet: clone the repo into `/var/www/circular.workshopper.ai`
 sh server/setup-site.sh circular.workshopper.ai you@example.com
 ```
 
-It installs Apache and certbot, installs uv and the Python dependencies, installs the `circular-concept` gunicorn systemd service, installs the Apache virtual host, and requests the HTTPS certificate. It also retires the earlier hand-made setup: the `flask_subdomain` service that ran the app from `/var/www/circular-concept` is stopped, and the domain's old virtual host files are kept under a backup name. Set the Cloudflare A record to DNS only first so certbot can reach the droplet directly.
+It installs Apache and certbot, installs uv and the Python dependencies, installs the `snowball-sprint-demo-app-web` gunicorn systemd service, installs the Apache virtual host, and requests the HTTPS certificate. It also retires the earlier hand-made setup: the `flask_subdomain` service that ran the app from `/var/www/circular-concept` is stopped, and the domain's old virtual host files are kept under a backup name. Set the Cloudflare A record to DNS only first so certbot can reach the droplet directly.
 
 The first time, move the existing clone instead of cloning again so the `.env` with the keys comes along. The virtual environment has to be rebuilt after a move because it contains absolute paths; the setup script does that:
 
