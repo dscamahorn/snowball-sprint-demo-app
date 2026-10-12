@@ -5,7 +5,8 @@
   "name": "Snowball Sprint demo app (Flask + uv)",
 
   // Microsoft's Python image: includes git, a shell, sudo, and common tools.
-  "image": "mcr.microsoft.com/devcontainers/python:3.14",
+  // The image is described in Dockerfile next to this file.
+  "build": { "dockerfile": "Dockerfile" },
 
   "features": {
     // uv manages the Python virtual environment and dependencies.
@@ -35,7 +36,7 @@
   // Docker creates the folders a bind mount needs as root, so the first
   // command hands ~/.claude back to the normal user (Claude Code writes its
   // session files there). Then the project's dependencies are installed.
-  "postCreateCommand": "sudo chown vscode:vscode /home/vscode/.claude && printf '@~/.claude/shared/CLAUDE.md\\n' > /home/vscode/.claude/CLAUDE.md && ln -sf shared/settings.json /home/vscode/.claude/settings.json && uv sync && npm install",
+  "postCreateCommand": "uv sync && npm install",
 
   // The Flask dev server port, forwarded to the Mac's browser. Port 5000 is
   // avoided because macOS reserves it for AirPlay Receiver.

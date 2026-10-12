@@ -44,6 +44,7 @@ Each milestone ends with something that runs and can be seen working.
 - [ ] **M9. Python tests.** Add pytest with unit tests for `parser.py`, `research_agent.py` helpers, `form_helpers.py`, and `result_cache.py`, plus route tests using Flask's test client. Deliverable: `uv run pytest` passes and is documented in the README.
 - [ ] **M10. Research progress detail.** Show the actual search queries streaming in on the home page overlay instead of only the cycling messages. Deliverable: the overlay lists each query as it runs.
 - [ ] **M11. Export.** Download the generated concepts as Markdown or PDF for the workshop deck. Deliverable: an Export button on the concepts page.
+- [ ] **M12. Search and sharing baseline.** The public site at circular.workshopper.ai serves the search, sharing, and crawler baseline (head tags, share image, JSON-LD, robots.txt, sitemap; the `stack-web-baseline` skill has the checklist). Added at the October 11, 2026 audit. Deliverable: every page's source shows the tags, `/robots.txt` and `/sitemap.xml` load, and a pasted link previews correctly.
 
 ## Deployment
 

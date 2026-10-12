@@ -1,0 +1,15 @@
+# Files that must never be copied into a Docker image, even by a "COPY . ."
+# line added later. Mirrors .gitignore, plus git's own folder.
+# Copy this file to the project root as .dockerignore (note the dot).
+.git
+.env
+.env.*
+!.env.example
+deploy.env
+.claude/
+node_modules/
+.venv/
+__pycache__/
+dist/
+cookies*
+.DS_Store
