@@ -124,3 +124,17 @@ FLASK_DEBUG=true
 FLASK_RUN_PORT=5050
 ```
 Optional PostHog analytics: `POSTHOG_ENABLED=true`, `POSTHOG_API_KEY`, `POSTHOG_HOST`.
+
+## Project rules
+
+- Dependency patch window: a known hole rated high or critical is fixed within
+  7 days; the rest wait for the fortnightly review. (ASVS V15.1.1 asks that
+  this be written down; the push-time audit checks it.)
+
+## Compact Instructions
+
+Claude Code reads this section when it summarizes a long conversation. Keep,
+verbatim: the milestone name and its branch, the Gherkin scenario being
+validated, every decision Doug made and every correction he gave, and the
+next step. Reference files and commits by path and hash instead of quoting
+their contents.
