@@ -110,7 +110,7 @@
   //    so a skill edit on the Mac applies at once and nothing is written
   //    into the mount. The Python comes from /opt/uv/python, where the
   //    Dockerfile already put one for the scanners, so no download happens.
-  "postCreateCommand": "uv sync && npm install && UV_PYTHON_INSTALL_DIR=/opt/uv/python uv tool install --editable ~/.claude/skills/timelapse",
+  "postCreateCommand": "uv sync && npm install && UV_PYTHON_INSTALL_DIR=/opt/uv/python uv tool install --editable ~/.claude/skills/make-timelapse",
 
   // Run as the non-root user that the image ships with.
   "remoteUser": "vscode",
