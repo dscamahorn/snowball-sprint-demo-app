@@ -12,3 +12,9 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "tavily-python>=0.7.24",
 ]
+
+[tool.uv]
+# Take no package version published less than three days ago; poisoned
+# releases are usually pulled within that window. Exempt one with
+# exclude-newer-package = { name = "..." }.
+exclude-newer = "P3D"
