@@ -55,17 +55,6 @@ RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
 # used. Bump the version at a two-week review.
 RUN npm install -g npm@12.2.0
 
-# The one exception to "scripts off". The Claude Code devcontainer feature
-# installs @anthropic-ai/claude-code with "npm install -g" after this image
-# is built, and that package's install script is what fetches the native
-# binary; without the allowance, claude fails with "exec format error"
-# (found by the read-only-mounts test on October 12, 2026). The setting is
-# a global-install allowlist by package name, so no other package's script
-# runs. It is a separate RUN line on purpose: in the same shell as the
-# install above, "npm" still meant the image's npm 10, which does not know
-# the option.
-RUN npm config set --location=global allow-scripts=@anthropic-ai/claude-code
-
 # System packages. ffmpeg is here for every project because the timelapse
 # skill (installed into the container by postCreateCommand, see
 # devcontainer.json) builds its video with it. Add the project's own system
@@ -104,3 +93,17 @@ RUN mkdir -p /home/vscode/.claude/projects \
     && printf '@~/.claude/shared/CLAUDE.md\n' > /home/vscode/.claude/CLAUDE.md \
     && ln -s shared/settings.json /home/vscode/.claude/settings.json \
     && chown -R vscode:vscode /home/vscode/.claude
+
+# Claude Code, installed with Anthropic's own installer as the normal user,
+# so it lives in that user's home folder (~/.local/bin/claude) and can
+# update itself. The Claude Code devcontainer feature, used until October
+# 12, 2026, ran "npm install -g" as root, which left a package the normal
+# user could not replace: every update inside a container failed with
+# EACCES until the next rebuild. Installing it here also means npm 12 runs
+# with no exceptions to its "install scripts off" rule. It comes last
+# because ~/.claude must already exist and belong to the user. USER
+# switches who runs the next lines; it goes back to root afterward so
+# anything added below this block runs as before.
+USER vscode
+RUN curl -fsSL https://claude.ai/install.sh | bash
+USER root
