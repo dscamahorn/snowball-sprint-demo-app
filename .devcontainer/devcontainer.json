@@ -2,18 +2,14 @@
   // Dev container for this project. Open the folder in VS Code and choose
   // "Reopen in Container". Everything (editing, terminal, Flask, Claude Code)
   // then runs inside the container. Built from the stack-devcontainer
-  // template's Python variant: the image's user is "vscode", and Node comes
-  // from the node feature below.
+  // template's Python variant: the image's user is "vscode", and Node is
+  // copied in by the Dockerfile.
   "name": "Snowball Sprint demo app (Flask + uv)",
 
   // The image is described in Dockerfile next to this file.
   "build": { "dockerfile": "Dockerfile" },
 
   "features": {
-    // Node, which the Python image does not have. Prettier and ESLint on the
-    // browser JavaScript need it, and Claude Code's feature below installs
-    // through npm, so Node has to come first.
-    "ghcr.io/devcontainers/features/node:1": { "version": "22" },
     // The GitHub CLI (gh) for management actions such as opening a pull
     // request. Git itself goes over SSH and needs no gh login.
     "ghcr.io/devcontainers/features/github-cli:1": {},
@@ -107,17 +103,9 @@
 
   // First-time setup when the container is built. Run `claude login`
   // afterward if the shared login file is empty.
-  // 1. npm 12, pinned, and its one allowed install script. They run here
-  //    and not in the Dockerfile because this Python image has no Node
-  //    until the node feature installs it. From npm 12, a package's install
-  //    scripts do not run unless they are allowed, git and remote-URL
-  //    dependencies are off, and a project's "min-release-age" cooldown is
-  //    honored. The allow-scripts line lets Claude Code's own install
-  //    script run (it fetches the native binary) and nothing else's. Bump
-  //    the version at a two-week review.
-  // 2. uv sync builds the Python environment, and npm install brings in
+  // 1. uv sync builds the Python environment, and npm install brings in
   //    Prettier and ESLint.
-  // 3. The timelapse skill as a uv tool, so `timelapse capture` works from
+  // 2. The timelapse skill as a uv tool, so `timelapse capture` works from
   //    any terminal in the container. It runs here and not in the
   //    Dockerfile because the skills mount does not exist yet at image
   //    build time. --editable means the tool's venv (in the container's
@@ -125,7 +113,7 @@
   //    so a skill edit on the Mac applies at once and nothing is written
   //    into the mount. The Python comes from /opt/uv/python, where the
   //    Dockerfile already put one for the scanners, so no download happens.
-  "postCreateCommand": "npm install -g npm@12.2.0 && npm config set --location=global allow-scripts=@anthropic-ai/claude-code && uv sync && npm install && UV_PYTHON_INSTALL_DIR=/opt/uv/python uv tool install --editable ~/.claude/skills/timelapse",
+  "postCreateCommand": "uv sync && npm install && UV_PYTHON_INSTALL_DIR=/opt/uv/python uv tool install --editable ~/.claude/skills/timelapse",
 
   // Run as the non-root user that the image ships with.
   "remoteUser": "vscode",

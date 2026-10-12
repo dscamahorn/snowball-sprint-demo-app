@@ -2,8 +2,8 @@
 # the devcontainer command builds the same file on the Air.
 #
 # Starts from Microsoft's Python image (git, a proper shell, sudo, and the
-# non-root "vscode" user). Node arrives later, from the node feature in
-# devcontainer.json.
+# non-root "vscode" user). Node is copied in below, from the official
+# Node image.
 FROM mcr.microsoft.com/devcontainers/python:3.14
 
 # uv, the house Python tool, plus the two security scanners the Security
@@ -23,12 +23,48 @@ RUN UV_TOOL_DIR=/opt/uv/tools UV_TOOL_BIN_DIR=/usr/local/bin \
     && UV_TOOL_DIR=/opt/uv/tools UV_TOOL_BIN_DIR=/usr/local/bin \
     UV_PYTHON_INSTALL_DIR=/opt/uv/python \
     uv tool install pip-audit==2.10.1 \
+    && UV_PYTHON_INSTALL_DIR=/opt/uv/python uv python install 3.14 \
     && chmod -R a+rX /opt/uv
+# The "uv python install" line makes sure /opt/uv/python holds a Python on
+# every image. The timelapse install in postCreateCommand looks there. uv
+# only downloads a Python for the scanners when the image's own is too old,
+# so on an image whose system Python is new enough (Node 22-bookworm) the
+# folder was never made and the timelapse install failed (found October 12,
+# 2026).
 
-# npm 12 is not set up here. This Python image has no Node yet at this point
-# (it arrives later, from the node feature in devcontainer.json), so npm
-# cannot run. The npm pin and the allow-scripts line run at the front of
-# postCreateCommand instead; devcontainer.json explains them.
+# Node, copied from the official Node image, because this Python image
+# has none. Node goes in here, at build time, so the npm 12 lines below
+# can run and nothing npm-related is left for postCreateCommand. (The node
+# feature was tried first, on October 12, 2026: it brings Node only after
+# this file is built, so npm 12 had to wait for postCreateCommand, where it
+# raced VS Code's own shells re-making nvm's "current" link and failed now
+# and then.) The two COPY lines bring the node program and its global
+# packages, npm among them; the RUN line makes the npm and npx commands,
+# which in the Node image are links to npm's own scripts.
+COPY --from=node:22-bookworm-slim /usr/local/bin/node /usr/local/bin/node
+COPY --from=node:22-bookworm-slim /usr/local/lib/node_modules /usr/local/lib/node_modules
+RUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+    && ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
+
+# npm 12, pinned. The Node copied in above ships npm 10. From npm 12, a
+# package's install scripts do not run unless the project lists the
+# package in an "allowScripts" allowlist in package.json (built with "npm
+# approve-scripts"), git and remote-URL dependencies are off, and the
+# "min-release-age" cooldown in the project's .npmrc is honored. Those
+# three closed the install-time path every 2026 npm supply-chain wave
+# used. Bump the version at a two-week review.
+RUN npm install -g npm@12.2.0
+
+# The one exception to "scripts off". The Claude Code devcontainer feature
+# installs @anthropic-ai/claude-code with "npm install -g" after this image
+# is built, and that package's install script is what fetches the native
+# binary; without the allowance, claude fails with "exec format error"
+# (found by the read-only-mounts test on October 12, 2026). The setting is
+# a global-install allowlist by package name, so no other package's script
+# runs. It is a separate RUN line on purpose: in the same shell as the
+# install above, "npm" still meant the image's npm 10, which does not know
+# the option.
+RUN npm config set --location=global allow-scripts=@anthropic-ai/claude-code
 
 # System packages. ffmpeg is here for every project because the timelapse
 # skill (installed into the container by postCreateCommand, see
@@ -47,11 +83,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # every user can read, so no download happens inside a running session (the
 # Bash sandbox allows only a short list of domains). This project does not
 # use Playwright yet; when it does, pin the same Playwright version in the
-# project and uncomment these lines. One catch for this Python image: npx
-# needs Node, which only arrives from the node feature after the image is
-# built, so these two lines will need adjusting before they work here (the
-# template has not covered that case yet). Bump the version at a two-week
-# review.
+# project and uncomment these lines. They work in this Python image as
+# they are, because the Node block above puts npx in place first. Bump
+# the version at a two-week review.
 # ENV PLAYWRIGHT_BROWSERS_PATH=/opt/playwright
 # RUN npx --yes playwright@1.64.0 install --with-deps chromium \
 #     && chmod -R a+rX /opt/playwright
