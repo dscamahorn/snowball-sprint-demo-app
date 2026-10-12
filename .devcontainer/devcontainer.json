@@ -12,12 +12,9 @@
   "features": {
     // The GitHub CLI (gh) for management actions such as opening a pull
     // request. Git itself goes over SSH and needs no gh login.
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    // Anthropic's feature that installs the Claude Code command-line tool,
-    // so "claude" works in the container's terminal. The VS Code extension
-    // below only adds the editor panel; it does not put "claude" on the
-    // terminal's path.
-    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
+    // Claude Code itself is installed by the Dockerfile, not by a feature,
+    // so it can update itself (the Dockerfile's last block says why).
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
 
   // Ports to reach from the Mac's browser. 5050 is the Flask dev server.
