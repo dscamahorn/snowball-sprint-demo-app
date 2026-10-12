@@ -30,7 +30,7 @@
   // Runs on the Mac just before the container is created. A bind mount of a
   // file that does not exist yet makes Docker create a folder in its place,
   // so this makes sure the login file exists first ("{}" means not logged in).
-  "initializeCommand": "mkdir -p ~/.claude/skills ~/.claude/web-baseline && ([ -f ~/.claude/.credentials.json ] || echo '{}' > ~/.claude/.credentials.json)",
+  "initializeCommand": "mkdir -p ~/.claude/skills ~/.claude/web-baseline ~/.claude/memory && ([ -f ~/.claude/.credentials.json ] || echo '{}' > ~/.claude/.credentials.json)",
 
   // Docker creates the folders a bind mount needs as root, so the first
   // command hands ~/.claude back to the normal user (Claude Code writes its
@@ -49,14 +49,18 @@
   //   .credentials.json  the Claude login, so it survives container rebuilds
   //   skills/            custom skills
   //   web-baseline/      the robots.txt template (read-only)
-  // The rest of ~/.claude (session transcripts, memory, caches) stays on the
+  //   memory/            Claude's own notes (settings.json points every
+  //                      project at this one folder, so they survive a
+  //                      rebuild and are shared across projects)
+  // The rest of ~/.claude (session transcripts, caches) stays on the
   // Mac where nothing in the container can read it.
   "mounts": [
     "source=${localEnv:HOME}/.claude/CLAUDE.md,target=/home/vscode/.claude/CLAUDE.md,type=bind,readonly",
     "source=${localEnv:HOME}/.claude/settings.json,target=/home/vscode/.claude/settings.json,type=bind",
     "source=${localEnv:HOME}/.claude/.credentials.json,target=/home/vscode/.claude/.credentials.json,type=bind",
     "source=${localEnv:HOME}/.claude/skills,target=/home/vscode/.claude/skills,type=bind",
-    "source=${localEnv:HOME}/.claude/web-baseline,target=/home/vscode/.claude/web-baseline,type=bind,readonly"
+    "source=${localEnv:HOME}/.claude/web-baseline,target=/home/vscode/.claude/web-baseline,type=bind,readonly",
+    "source=${localEnv:HOME}/.claude/memory,target=/home/vscode/.claude/memory,type=bind"
   ],
 
   "customizations": {
