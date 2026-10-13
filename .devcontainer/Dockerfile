@@ -94,6 +94,16 @@ RUN mkdir -p /home/vscode/.claude/projects \
     && ln -s shared/settings.json /home/vscode/.claude/settings.json \
     && chown -R vscode:vscode /home/vscode/.claude
 
+# Git inside a container that the devcontainer CLI starts (the Air's dev
+# script) refuses the checkout with "detected dubious ownership": Colima's
+# file share shows the top folder of the checkout as root's while
+# everything inside it belongs to the normal user, and git checks the top
+# folder. VS Code's container on the Pro does not show this, and the
+# setting is harmless there. "*" trusts every folder, which is fine inside
+# a container that only ever holds this one checkout. System level, so it
+# applies to whichever user runs git. Found October 12, 2026.
+RUN git config --system --add safe.directory '*'
+
 # Claude Code, installed with Anthropic's own installer as the normal user,
 # so it lives in that user's home folder (~/.local/bin/claude) and can
 # update itself. The Claude Code devcontainer feature, used until October
