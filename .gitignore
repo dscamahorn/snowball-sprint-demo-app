@@ -12,3 +12,11 @@ __pycache__/
 node_modules/
 dist/
 deploy.env
+
+# A crash dump. When a program crashes inside a Linux container, the
+# kernel can write its memory to a file named core (or core.<pid>) in the
+# working directory, which is the project root. The leading slash keeps
+# the rule at the root so a real folder named core deeper in the project
+# is still tracked.
+/core
+/core.[0-9]*
