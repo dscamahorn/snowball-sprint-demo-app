@@ -24,3 +24,13 @@ chmod 700 "$SSH_FOLDER"
 # sshd refuses an authorized_keys file others can write, hence the chmod.
 grep -v '^#' "$TRUSTED_KEYS_FILE" | cut -d ' ' -f 2- > "$AUTHORIZED_KEYS_FILE"
 chmod 600 "$AUTHORIZED_KEYS_FILE"
+
+# A safety net for the GitHub CLI. A session signs gh in for the push-time
+# Dependabot check and out again at the end of it (the stack-security
+# skill, step 5); if that session was interrupted, the sign-in would stay
+# until a rebuild. Signing out here limits it to the next container start.
+# "|| true" because gh says "not logged in" (an error) when there is
+# nothing to sign out, and that must not stop the script.
+if command -v gh > /dev/null; then
+  gh auth logout --hostname github.com > /dev/null 2>&1 || true
+fi
