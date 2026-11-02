@@ -66,16 +66,17 @@
   //   memory/            Claude's own notes (settings.json points every
   //                      project at this one folder, so they survive a
   //                      rebuild and are shared across projects)
-  //   projects/-workspaces-snowball-sprint-demo-app
-  //                      this project's own session transcripts. Claude Code
-  //                      names the folder after the working directory with
-  //                      every "/" turned into "-", so the container's
-  //                      /workspaces/snowball-sprint-demo-app lands
-  //                      here. Mounting it from the Mac means the
-  //                      transcripts survive a rebuild and the setup
-  //                      review's corrections miner can read them. The
-  //                      container sees only what it wrote itself, so
-  //                      nothing new is exposed to it.
+  //   container-projects/snowball-sprint-demo-app
+  //                      this project's own session transcripts, mounted as
+  //                      the container's whole ~/.claude/projects. Claude
+  //                      Code makes one folder per working directory, and
+  //                      every Desktop worktree is a new one
+  //                      (.claude/worktrees/<name>), so mounting the whole
+  //                      folder is what keeps worktree sessions. On the Mac
+  //                      they survive a rebuild and the setup review's
+  //                      corrections miner can read them. The container sees
+  //                      only what it wrote itself, so nothing new is
+  //                      exposed to it.
   // shared/ and skills/ are mounted read-only: the container only reads
   // them, so nothing in it (a package's install script, a hijacked session)
   // can rewrite the rules, the settings, or a skill. Settings changes are
@@ -88,7 +89,7 @@
     "source=${localEnv:HOME}/.claude/.credentials.json,target=/home/vscode/.claude/.credentials.json,type=bind",
     "source=${localEnv:HOME}/.claude/skills,target=/home/vscode/.claude/skills,type=bind,readonly",
     "source=${localEnv:HOME}/.claude/memory,target=/home/vscode/.claude/memory,type=bind",
-    "source=${localEnv:HOME}/.claude/projects/-workspaces-snowball-sprint-demo-app,target=/home/vscode/.claude/projects/-workspaces-snowball-sprint-demo-app,type=bind"
+    "source=${localEnv:HOME}/.claude/container-projects/snowball-sprint-demo-app,target=/home/vscode/.claude/projects,type=bind"
   ],
 
   // Runs on the Mac just before the container is created. A bind mount of a
@@ -96,7 +97,7 @@
   // so this makes sure the login file exists first ("{}" means not logged in),
   // and a missing folder would be created owned by root, so the folders are
   // made here too.
-  "initializeCommand": "mkdir -p ~/.claude/shared ~/.claude/skills ~/.claude/memory ~/.claude/projects/-workspaces-snowball-sprint-demo-app && ([ -f ~/.claude/.credentials.json ] || echo '{}' > ~/.claude/.credentials.json)",
+  "initializeCommand": "mkdir -p ~/.claude/shared ~/.claude/skills ~/.claude/memory ~/.claude/container-projects/snowball-sprint-demo-app && ([ -f ~/.claude/.credentials.json ] || echo '{}' > ~/.claude/.credentials.json)",
 
   // First-time setup when the container is built. Run `claude login`
   // afterward if the shared login file is empty.
@@ -111,6 +112,16 @@
   //    into the mount. The Python comes from /opt/uv/python, where the
   //    Dockerfile already put one for the scanners, so no download happens.
   "postCreateCommand": "uv sync && npm install && UV_PYTHON_INSTALL_DIR=/opt/uv/python uv tool install --editable ~/.claude/skills/make-timelapse",
+
+  // Runs on every start: prepares SSH logins so the Claude desktop app can
+  // run sessions in here, and ~/.claude/bin/devshell can open a terminal.
+  // The script says how and why.
+  "postStartCommand": "bash .devcontainer/ssh-login-setup.sh",
+
+  // A fixed container name, so the Mac's ~/.ssh/config ("Host *-dev") can
+  // reach it with `docker exec`. Without it Docker picks a random name on
+  // every rebuild.
+  "runArgs": ["--name", "snowball-sprint-demo-app-dev"],
 
   // Run as the non-root user that the image ships with.
   "remoteUser": "vscode",

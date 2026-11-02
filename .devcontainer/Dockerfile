@@ -63,7 +63,31 @@ RUN npm install -g npm@12.2.1
 # extras; removing the apt lists afterward does the same.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
+    openssh-server \
     && rm -rf /var/lib/apt/lists/*
+
+# SSH logins for the Claude desktop app and devshell. sshd never runs as a
+# service and no port is opened: the Mac starts it per connection through
+# `docker exec -i -u root <container> /usr/sbin/sshd -i` (the "Host *-dev"
+# ProxyCommand in the Mac's ~/.ssh/config). The settings: key logins only,
+# and only the normal user. The git name and signing settings from
+# containerEnv already reach an SSH login through /etc/environment, which the
+# container fills at start. The desktop app never forwards the SSH agent, so
+# a commit there cannot be signed: SetEnv turns signing off for SSH logins
+# (GIT_CONFIG_VALUE_3 is commit.gpgsign in devcontainer.json), devshell turns
+# it back on because it forwards the agent, and the VS Code terminal keeps
+# signing. /run/sshd is a folder sshd insists on, and ssh-keygen -A makes the
+# server's own host keys, which the package does not make during an image
+# build. The stack-devcontainer skill has the details.
+RUN mkdir -p /run/sshd \
+    && ssh-keygen -A \
+    && printf '%s\n' \
+    'PasswordAuthentication no' \
+    'KbdInteractiveAuthentication no' \
+    'PermitRootLogin no' \
+    'AllowUsers vscode' \
+    'SetEnv GIT_CONFIG_VALUE_3=false' \
+    > /etc/ssh/sshd_config.d/devcontainer.conf
 
 # Web projects only: the browser for the project's verification skill (the
 # stack-verify skill explains the skill; Playwright is the library that drives
