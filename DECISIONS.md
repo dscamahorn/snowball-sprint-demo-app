@@ -15,6 +15,20 @@ tags: [decisions, snowball-sprint-demo-app]
 
 One decision per entry, numbered in the order they were made. `Instead` names the road not taken and is never blank when a proposal was rejected. A later decision that replaces an earlier one says so in `Supersedes` and leaves the old entry in place. The entry shape is in the `stack-markdown` skill's `template/decision-log.md`.
 
+### D001: Claude Desktop sessions run inside the dev container, reached over SSH
+- Date: 2026-11-02
+- Branch: desktop-ssh-sessions
+- Area: stack
+- Because: The setup rolled out from curiouscarbons-site (its DECISIONS.md, D001 to D008): sshd in the image started per connection by `docker exec`, a fixed `snowball-sprint-demo-app-dev` container name, the whole transcript folder mounted from `~/.claude/container-projects/snowball-sprint-demo-app`, and unsigned commits from Desktop sessions. Applied to every container repo at once at Doug's request instead of waiting for the November 10 review.
+- Instead: waiting for the November 10, 2026 review to pick repos one by one.
+- Supersedes: none
+
 ## Milestone close
 
 One entry per merged branch, written before the merge from Doug's answers. "none" is a valid answer for every line; an invented answer is not.
+
+### desktop-ssh-sessions
+- Merged: 2026-11-02
+- Outcome: Measured on 2026-11-02: the image built and `sshd -t` passed on the new configuration (the rollout's build test).
+- Lesson: none
+- Client said: none
