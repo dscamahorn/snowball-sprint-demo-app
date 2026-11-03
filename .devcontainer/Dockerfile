@@ -32,6 +32,24 @@ RUN UV_TOOL_DIR=/opt/uv/tools UV_TOOL_BIN_DIR=/usr/local/bin \
 # folder was never made and the timelapse install failed (found October 12,
 # 2026).
 
+# The third scanner: osv-scanner (Google) checks every lock file in the repo
+# (uv.lock, package-lock.json, and others) against the same advisories
+# Dependabot uses, on the branch itself and with no GitHub sign-in. It reads
+# lock entries for other platforms too, which pip-audit skips (the
+# stack-security skill, step 5). It is one program file from Google's GitHub
+# release; the checksum check stops the build if the download is not the file
+# Google published. Pinned like the others: bump the version and both
+# checksums (from the release's osv-scanner_SHA256SUMS) at a two-week review.
+ARG OSV_SCANNER_VERSION=2.7.0
+ARG OSV_SCANNER_SHA256_AMD64=160c6253e2922e9e0a6a9771c5c4c40a4b3c6090b34a3cdd5e80c96cc2e4218b
+ARG OSV_SCANNER_SHA256_ARM64=4061ef4c021ed3c47f203b818f337e351336cc5cd67c0274fc36bd1dfc728dd7
+RUN architecture="$(dpkg --print-architecture)" \
+    && if [ "$architecture" = "arm64" ]; then expected_sha256="$OSV_SCANNER_SHA256_ARM64"; else expected_sha256="$OSV_SCANNER_SHA256_AMD64"; fi \
+    && curl -fsSL -o /usr/local/bin/osv-scanner \
+    "https://github.com/google/osv-scanner/releases/download/v${OSV_SCANNER_VERSION}/osv-scanner_linux_${architecture}" \
+    && echo "${expected_sha256}  /usr/local/bin/osv-scanner" | sha256sum -c - \
+    && chmod 755 /usr/local/bin/osv-scanner
+
 # Node, copied from the official Node image, because this Python image
 # has none. Node goes in here, at build time, so the npm 12 lines below
 # can run and nothing npm-related is left for postCreateCommand. (The node
