@@ -23,6 +23,14 @@ One decision per entry, numbered in the order they were made. `Instead` names th
 - Instead: waiting for the November 10, 2026 review to pick repos one by one.
 - Supersedes: none
 
+### D002: osv-scanner in the image replaces the post-push Dependabot read
+- Date: 2026-11-03
+- Branch: add-osv-scanner
+- Area: stack
+- Because: The push-time step read Dependabot's alerts after a push, which needed a GitHub sign-in every time and only ever saw `main` (Dependabot scans the default branch). osv-scanner reads every lock file on the branch before the push, platform-only entries included, with no sign-in. From the stack-devcontainer template, version and checksums pinned.
+- Instead: keeping the Dependabot read with a sign-in per push, or a lasting GitHub token in the container.
+- Supersedes: none
+
 ## Milestone close
 
 One entry per merged branch, written before the merge from Doug's answers. "none" is a valid answer for every line; an invented answer is not.
@@ -30,5 +38,11 @@ One entry per merged branch, written before the merge from Doug's answers. "none
 ### desktop-ssh-sessions
 - Merged: 2026-11-02
 - Outcome: Measured on 2026-11-02: the image built and `sshd -t` passed on the new configuration (the rollout's build test).
+- Lesson: none
+- Client said: none
+
+### add-osv-scanner
+- Merged: 2026-11-03
+- Outcome: Measured on 2026-11-03: the image built with the checksum check passing and `osv-scanner --version` printed 2.7.0.
 - Lesson: none
 - Client said: none
