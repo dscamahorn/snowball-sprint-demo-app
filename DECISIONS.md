@@ -46,3 +46,9 @@ One entry per merged branch, written before the merge from Doug's answers. "none
 - Outcome: Measured on 2026-11-03: the image built with the checksum check passing and `osv-scanner --version` printed 2.7.0.
 - Lesson: none
 - Client said: none
+
+### fix-dependency-scan
+- Merged: 2026-11-03
+- Outcome: Measured on 2026-11-03: osv-scanner went from one critical finding in certifi and four high in pyasn1 to one medium finding (minimatch, a development package); the app loaded and /health answered 200.
+- Lesson: none
+- Client said: none
