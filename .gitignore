@@ -20,3 +20,7 @@ deploy.env
 # is still tracked.
 /core
 /core.[0-9]*
+
+# Notes passed between sessions in different places (a dev container and
+# the Mac): handoffs and skill requests. Not part of the project.
+handoffs/

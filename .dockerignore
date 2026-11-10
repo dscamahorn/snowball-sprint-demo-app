@@ -13,3 +13,8 @@ __pycache__/
 dist/
 cookies*
 .DS_Store
+
+# Added from the dockerignore template (repo audit, November 10, 2026).
+handoffs/
+core
+core.[0-9]*
